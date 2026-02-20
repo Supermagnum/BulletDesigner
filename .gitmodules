@@ -1,16 +1,4 @@
-# Git submodules for BulletDesigner workbench
-# 
-# This file defines external repositories included as submodules.
-# Currently, BulletDesigner is a standalone repository with no submodules.
-#
-# Format for adding submodules:
-# [submodule "submodule_name"]
-#     path = path/to/submodule
-#     url = https://github.com/username/repository.git
-#     branch = main
-#
-# Example (if external dependencies are needed in the future):
-# [submodule "external_library"]
-#     path = external_library
-#     url = https://github.com/example/external_library.git
-#     branch = main
+[submodule "BulletDesigner"]
+    path = BulletDesigner
+    url = https://github.com/Supermagnum/BulletDesigner
+    branch = main
