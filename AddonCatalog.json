@@ -1,0 +1,16 @@
+{
+  "$schema": "https://raw.githubusercontent.com/FreeCAD/AddonManager/refs/heads/main/AddonCatalog.schema.json",
+  "_meta": {
+    "description": "Addon catalog entry for BulletDesigner workbench. This file is typically maintained in the FreeCAD-addons registry repository, but is included here for reference.",
+    "schema_version": "2020-12"
+  },
+  "BulletDesigner": [
+    {
+      "repository": "https://github.com/Supermagnum/BulletDesigner",
+      "git_ref": "main",
+      "branch_display_name": "main",
+      "zip_url": "https://github.com/Supermagnum/BulletDesigner/archive/refs/heads/main.zip",
+      "freecad_min": "0.21"
+    }
+  ]
+}
