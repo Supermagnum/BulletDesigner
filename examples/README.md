@@ -43,3 +43,11 @@ When opening these files:
 - **Recommendation:** Use the current Ballistic Calculator to recalculate stability with the updated Miller Stability Formula (Sg ≥ 1.8 for monolithic copper/brass bullets, Sg ≥ 1.5 for lead-core bullets)
 
 The example files serve as good starting points for your own designs. You can modify parameters, recalculate dimensions, and update ballistic properties using the current version of the workbench.
+
+## Note for Nose and Tip Features
+
+These example files are baseline designs and may not include the latest hollow point and tip settings. After opening an example:
+
+- Review the **Nose** tab in the task panel
+- Use tooltips on HP and tip fields to see calculated recommended or maximum values
+- Re-run the **Ballistic Calculator** to refresh corrected mass, corrected l, and velocity/material warnings

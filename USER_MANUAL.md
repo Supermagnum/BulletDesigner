@@ -105,7 +105,17 @@ After installation, you'll see the Bullet Designer toolbar with the following co
    - Check "Live Preview" checkbox
    - The bullet will update in real-time as you change parameters
 
-9. **Create the Bullet**
+9. **Configure Nose** (Optional)
+   - Go to the "Nose" tab
+   - Select:
+     - **Solid**
+     - **Hollow Point**
+     - **Hollow Point + Tip**
+   - For hollow point configurations, set HP diameter and HP depth
+   - For hollow point + tip, set tip dimensions and tip material
+   - Hover each field to see calculated recommended or maximum values in tooltips
+
+10. **Create the Bullet**
    - Click "OK" to create the bullet object
    - The bullet will appear in the 3D view and tree view
 
@@ -131,6 +141,19 @@ After installation, you'll see the Bullet Designer toolbar with the following co
 - **Meplat Diameter**: Diameter of the flat tip (meplat)
   - Usually 0.1-0.5 mm for match bullets
   - Must be less than land diameter
+
+#### What is a meplat?
+
+A **meplat** is the flat face at the nose tip of the bullet.
+
+- If the nose ends in a tiny flat circle instead of a perfect point, that flat circle is the meplat.
+- Meplat is measured as a **diameter in mm**.
+- In this workbench, meplat affects drag-related calculations and hollow point limits.
+
+Practical examples:
+- A 7.62 mm bullet with a 0.30 mm flat at the tip has a meplat of **0.30 mm**.
+- If you set meplat to **1.50 mm**, the bullet nose becomes visibly blunter.
+- In **Hollow Point + Tip**, the tip point diameter is treated as the effective meplat used in calculations.
 
 ### Driving Bands
 
@@ -213,6 +236,36 @@ For 3 bands of 1.5 mm each with 0.5 mm spacing:
 - **Boat Tail Length** should not exceed 30% of total length
 - **Ogive Caliber Ratio** should be between 2 and 15
 
+### Hollow Point and Tip Constraints
+
+The workbench enforces nose constraints before applying geometry or ballistic calculations.
+
+- **HP diameter**:
+  - Must be less than effective diameter
+  - Must satisfy wall-thickness rule at meplat:
+    - `HP_diameter_max = meplat_diameter - (2 × minimum_wall_thickness)`
+- **HP depth**:
+  - Must be less than body length
+  - Practical ogive range is approximately 50-60% of ogive length
+- **Solid nose above cavity floor**:
+  - Must remain at or above `1.5 × meplat_diameter`
+- **Tip geometry**:
+  - `tip_base_diameter <= HP_diameter`
+  - `tip_tip_diameter < tip_base_diameter`
+  - Tip point minimum depends on manufacturing method:
+    - Machined: 0.3 mm
+    - SLA: 0.5 mm
+    - FDM: 0.8 mm
+- **Assembly fit**:
+  - Stem, shoulder, and cone must fit ogive nose length with tolerance of +/- 0.1 mm
+  - Stem bottom-out is blocked; minimum air gap must be at least 0.15 mm
+- **Tip material category**:
+  - Functional: allowed
+  - Prototype: blocked for live-fire calculations
+  - Geometry Only: blocked for live-fire calculations
+
+Tooltips in the Nose tab are dynamic and update with current geometry and material assumptions, so users can see limits before entering values.
+
 ## Ballistic Calculator
 
 The ballistic calculator helps you analyze bullet stability and performance.
@@ -237,6 +290,16 @@ The ballistic calculator helps you analyze bullet stability and performance.
 - **Ballistic Coefficient (BC)**: Higher is better (less drag)
 - **Sectional Density**: Weight per unit of frontal area
 - **Recommended Twist Rate**: Calculated using Greenhill formula
+- **Nose-Corrected Results**:
+  - Mass removed by cavity
+  - Mass added by tip
+  - Corrected mass
+  - Corrected length in calibers used by Miller formula
+  - Effective meplat used for drag-related calculations
+  - Form factor indication including HP penalty state
+- **Velocity and Material Status**:
+  - Tip material velocity rating compared to muzzle velocity
+  - Severity output: OK, WARNING, or ERROR
 
 ## Trajectory & Transonic Calculator
 
@@ -537,6 +600,14 @@ To add custom materials:
 For issues, questions, or feature requests:
 - GitHub Issues: [Repository URL]
 - FreeCAD Forum: [Forum Link]
+
+## Safety Disclaimer
+
+This workbench is a design and calculation aid only.
+
+Always seek professional advice before manufacturing, loading, or firing any projectile design. A wrongly designed bullet can cause violent pressure spikes that may result in personal injury, injury to others, or equipment damage.
+
+The author or maker of this workbench is not liable for damages caused by incorrect dimensions, incorrect material selection, or incorrect tolerances.
 
 ## Version Information
 

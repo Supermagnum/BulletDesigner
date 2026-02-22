@@ -16,7 +16,7 @@ A comprehensive FreeCAD workbench for parametric bullet and projectile design wi
 ### Core Functionality
 
 - **Parametric Bullet Design**: Create fully parametric bullets with live updates
-- **Multiple Bullet Types**: Support for land-riding, flat-base, boat-tail, and hollow-point designs ( hole must be added manually)
+- **Multiple Bullet Types**: Support for land-riding, flat-base, boat-tail, solid nose, hollow point, and hollow point + tip designs
 - **Driving Bands**: Configurable number, spacing, and dimensions for driving bands
 - **Ogive Profiles**: Three ogive types (tangent, secant, elliptical) with customizable caliber ratios
 - **Ballistic Calculations**: 
@@ -38,6 +38,7 @@ A comprehensive FreeCAD workbench for parametric bullet and projectile design wi
 - **Task Panel**: Comprehensive parameter editing with tabbed interface
 - **Live Preview**: Real-time geometry updates as parameters change
 - **Ballistic Calculator**: Standalone calculator dialog for stability analysis
+- **Dynamic Validation Tooltips**: Nose and tip fields show calculated recommended or maximum values
 - **Preferences**: Customizable defaults and units
 
 ##  Important: Bands Must Fit on Bullet
@@ -114,6 +115,7 @@ For detailed step-by-step instructions, see the **[User Manual](USER_MANUAL.md)*
    - **Ogive**: Type, caliber ratio, meplat diameter
    - **Bands**: Number, length, spacing (** Ensure bands fit!**)
    - **Base**: Flat or boat tail configuration
+   - **Nose**: Solid, hollow point, or hollow point + tip with material-aware validation
    - **Material**: Material selection and density
 5. Enable "Live Preview" to see changes in real-time
 6. **Verify bands fit** (see warning above)
@@ -133,6 +135,8 @@ For detailed step-by-step instructions, see the **[User Manual](USER_MANUAL.md)*
    - Ballistic coefficient
    - Sectional density
    - Recommended twist rate
+   - Nose correction results (mass removed or added, corrected l, effective meplat, form factor usage)
+   - Tip material velocity status (OK, WARNING, or ERROR)
 
 ### Trajectory & Transonic Calculator
 
@@ -176,6 +180,19 @@ For detailed step-by-step instructions, see the **[User Manual](USER_MANUAL.md)*
 - **Ogive Caliber Ratio**: Length of ogive in calibers (typically 5-12)
 - **Meplat Diameter**: Tip diameter in mm
 
+#### What is a meplat?
+
+The **meplat** is the small flat area at the very tip of the bullet nose.  
+If the tip is not perfectly sharp, that flat circle is the meplat.
+
+- A **smaller meplat** usually reduces drag and can improve BC.
+- A **larger meplat** is blunter and can increase drag, but may be desirable for specific terminal behavior.
+
+Examples:
+- If a 6.5 mm bullet has a tip flat of 0.20 mm, the meplat is **0.20 mm**.
+- In hollow point mode, the cavity opening at the tip becomes the effective meplat reference.
+- In hollow point + tip mode, the tip point diameter is used as the effective meplat.
+
 ### Driving Bands
 
 - **Number of Bands**: 0-6 driving bands
@@ -192,6 +209,19 @@ For detailed step-by-step instructions, see the **[User Manual](USER_MANUAL.md)*
   - **Boat Tail**: Tapered base for reduced drag
 - **Boat Tail Length**: Length of taper in mm
 - **Boat Tail Angle**: Taper angle in degrees (typically 8-10°)
+
+### Nose and Tip Configuration
+
+- **Nose Type**:
+  - **Solid**: legacy behavior, no cavity and no tip
+  - **Hollow Point**: hollow point cavity without tip
+  - **Hollow Point + Tip**: hollow point cavity with ballistic tip material
+- **HP Diameter**: Must remain below both effective diameter and wall-thickness-derived maximum
+- **HP Depth**: Practical ogive limit uses recommended range of approximately 50-60% of ogive length
+- **Tip Base Diameter**: Must be less than or equal to HP diameter
+- **Tip Tip Diameter**: Must be less than tip base diameter and above method-dependent minimum
+- **Tip Material**: Functional materials are allowed; Geometry Only and Prototype are blocked for live-fire calculations
+- **Tooltips**: Hovering nose and tip fields shows calculated maximums based on current geometry, material, and velocity assumptions
 
 ### Material Properties
 
@@ -526,6 +556,14 @@ This workbench requires FreeCAD 0.21 or later due to API changes. It is not back
 - Cartridge design is not yet implemented (placeholder)
 - Bullet library browser is not yet implemented (placeholder)
 - **Bands must fit on bullet**: If bands don't fit within body length, solid generation will fail (this is by design to prevent invalid geometry)
+
+## Safety Disclaimer
+
+This workbench is a design and calculation aid only.
+
+Always seek professional advice before manufacturing, loading, or firing any projectile design. A wrongly designed bullet can cause violent pressure spikes that may result in personal injury, injury to others, or equipment damage.
+
+The author or maker of this workbench is not liable for damages caused by incorrect dimensions, incorrect material selection, or incorrect tolerances.
 
 ## Contributing
 

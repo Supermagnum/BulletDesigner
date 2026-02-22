@@ -7,11 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Dynamic calculated tooltips for nose and tip inputs in both Task Panel and Ballistic Calculator
+- Documentation updates for nose and tip validation limits and severity behavior
+- Added BDLogo.svg logo file
+
+### Changed
+- Clarified README feature descriptions for integrated hollow point and hollow point + tip workflows
+- Expanded user manual with current nose geometry, wall-thickness, and material-category constraints
+
 ### Removed
 - Deleted SMLogo.svg logo file
-
-### Added
-- Added BDLogo.svg logo file
 
 ## [1.0.0] - 2026-02-16
 
