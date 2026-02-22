@@ -1,5 +1,13 @@
 # Bullet Designer Workbench for FreeCAD
 
+## Safety Disclaimer
+
+This workbench is a design and calculation aid only.
+
+Always seek professional advice before manufacturing, loading, or firing any projectile design. A wrongly designed bullet can cause violent pressure spikes that may result in personal injury, injury to others, or equipment damage.
+
+The author or maker of this workbench is not liable for damages caused by incorrect dimensions, incorrect material selection, or incorrect tolerances.
+
 A comprehensive FreeCAD workbench for parametric bullet and projectile design with ballistic calculations, material database, and export capabilities.
 
 ![Bullet Designer Workbench](Resources/screenshots/screenshot.png)
@@ -556,14 +564,6 @@ This workbench requires FreeCAD 0.21 or later due to API changes. It is not back
 - Cartridge design is not yet implemented (placeholder)
 - Bullet library browser is not yet implemented (placeholder)
 - **Bands must fit on bullet**: If bands don't fit within body length, solid generation will fail (this is by design to prevent invalid geometry)
-
-## Safety Disclaimer
-
-This workbench is a design and calculation aid only.
-
-Always seek professional advice before manufacturing, loading, or firing any projectile design. A wrongly designed bullet can cause violent pressure spikes that may result in personal injury, injury to others, or equipment damage.
-
-The author or maker of this workbench is not liable for damages caused by incorrect dimensions, incorrect material selection, or incorrect tolerances.
 
 ## Contributing
 

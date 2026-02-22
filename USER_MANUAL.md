@@ -1,5 +1,13 @@
 # Bullet Designer User Manual
 
+## Safety Disclaimer
+
+This workbench is a design and calculation aid only.
+
+Always seek professional advice before manufacturing, loading, or firing any projectile design. A wrongly designed bullet can cause violent pressure spikes that may result in personal injury, injury to others, or equipment damage.
+
+The author or maker of this workbench is not liable for damages caused by incorrect dimensions, incorrect material selection, or incorrect tolerances.
+
 ## Table of Contents
 
 1. [Introduction](#introduction)
@@ -600,14 +608,6 @@ To add custom materials:
 For issues, questions, or feature requests:
 - GitHub Issues: [Repository URL]
 - FreeCAD Forum: [Forum Link]
-
-## Safety Disclaimer
-
-This workbench is a design and calculation aid only.
-
-Always seek professional advice before manufacturing, loading, or firing any projectile design. A wrongly designed bullet can cause violent pressure spikes that may result in personal injury, injury to others, or equipment damage.
-
-The author or maker of this workbench is not liable for damages caused by incorrect dimensions, incorrect material selection, or incorrect tolerances.
 
 ## Version Information
 
