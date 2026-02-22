@@ -185,16 +185,43 @@ Practical examples:
 
 ### Material Properties
 
-Built-in materials:
-- Pure Copper (8.96 g/cm³)
-- Gilding Metal 95/5 (8.86 g/cm³)
-- Brass 70/30 (8.53 g/cm³)
-- Lead Core (11.34 g/cm³)
-- Copper Alloy (8.70 g/cm³)
-- Lead-Tin Alloy 95/5 (11.20 g/cm³)
-- Steel (7.85 g/cm³)
+#### Bullet Body Materials
 
-You can also enter a custom density in g/cm³.
+| Material | Density (g/cm3) | Typical Use |
+|----------|------------------|-------------|
+| Pure Copper | 8.96 | Monolithic bullets |
+| Gilding Metal (95/5) | 8.86 | Common jacket and solid body material |
+| Brass (70/30) | 8.53 | Harder monolithic body |
+| Copper Alloy | 8.70 | General-purpose copper-based body |
+| Lead Core | 11.34 | Traditional lead-core bullets |
+| Lead-Tin Alloy (95/5) | 11.20 | Cast or core alloy variants |
+| Steel | 7.85 | Specialty core or body designs |
+| Tungsten Core | 19.30 | High-density specialty core |
+| Jacketed Tungsten Core | 18.00 | Jacketed high-density core designs |
+
+You can also enter a custom density in g/cm3.
+
+#### Ballistic Cap Materials vs Speed
+
+| Material | Max Velocity (m/s) | Category | Guidance |
+|----------|---------------------|----------|----------|
+| PEEK | 1300 | Functional | Recommended default for high velocity |
+| Torlon (PAI) | 1300 | Functional | High thermal resistance |
+| Aluminium 6061 | 1300 | Functional | Metal tip option |
+| Ultem (PEI) | 1100 | Functional | Use caution above rating |
+| PEEK (3D Printed) | 1300 | Functional | Requires high-temperature print setup |
+| Ultem 9085 (3D Printed) | 1100 | Functional | Use caution above rating |
+| PA12-CF (3D Printed) | 900 | Functional | Mid-velocity printable option |
+| Delrin (POM) | 600 | Functional | Low-velocity only |
+| Resin SLA (High Temp) | 400 | Prototype | Prototype-level functional testing only |
+| PETG (3D Printed) | 300 | Prototype | Prototype only |
+| PLA | 0 | Geometry Only | No live fire |
+| Resin SLA (Standard) | 0 | Geometry Only | No live fire |
+
+Interpretation:
+- `Functional`: allowed for live-fire calculations, still subject to geometry and velocity checks.
+- `Prototype`: blocked for live-fire calculations in current validation.
+- `Geometry Only`: blocked for live-fire calculations.
 
 ## Important Constraints
 
