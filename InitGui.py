@@ -76,13 +76,6 @@ class BulletDesignerWorkbench(Gui.Workbench):
             App.Console.PrintError(traceback.format_exc())
         
         try:
-            from Commands import CreateCartridge
-            commands_loaded.append("CreateCartridge")
-            App.Console.PrintLog("  ✓ CreateCartridge loaded\n")
-        except Exception as e:
-            App.Console.PrintWarning(f"  ⚠ Failed to import CreateCartridge: {e}\n")
-        
-        try:
             from Commands import BulletLibrary
             commands_loaded.append("BulletLibrary")
             App.Console.PrintLog("  ✓ BulletLibrary loaded\n")
@@ -120,8 +113,7 @@ class BulletDesignerWorkbench(Gui.Workbench):
         
         # Create menu
         create_menu = [
-            "BulletDesigner_CreateBullet",
-            "BulletDesigner_CreateCartridge"
+            "BulletDesigner_CreateBullet"
         ]
         self.appendMenu(["Bullet Designer", "Create"], create_menu)
         

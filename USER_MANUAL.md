@@ -54,7 +54,6 @@ After installation, you'll see the Bullet Designer toolbar with the following co
 - **Create Bullet**: Create a new parametric bullet object
 - **Ballistic Calculator**: Calculate stability and ballistic coefficients
 - **Trajectory & Transonic Calculator**: Calculate bullet trajectory with transonic zone analysis
-- **Create Cartridge**: (Placeholder - coming soon)
 - **Bullet Library**: (Placeholder - coming soon)
 - **Export Tools**: Export bullets to STL or STEP format
 

@@ -506,7 +506,6 @@ BulletDesigner/
 │   ├── BallisticCalculator.py
 │   ├── TrajectoryCalculator.py
 │   ├── BallisticCalculator.py
-│   ├── CreateCartridge.py
 │   ├── BulletLibrary.py
 │   └── ExportTools.py
 ├── Objects/               # Feature objects
@@ -572,7 +571,6 @@ This workbench requires FreeCAD 0.21 or later due to API changes. It is not back
 
 ## Limitations and Known Issues
 
-- Cartridge design is not yet implemented (placeholder)
 - Bullet library browser is not yet implemented (placeholder)
 - **Bands must fit on bullet**: If bands don't fit within body length, solid generation will fail (this is by design to prevent invalid geometry)
 
@@ -612,7 +610,6 @@ For issues, questions, or feature requests, please use the GitHub issue tracker.
 
 ## Possible future Enhancements
 
-- Complete cartridge design module
 - Bullet library browser with presets
 
 
