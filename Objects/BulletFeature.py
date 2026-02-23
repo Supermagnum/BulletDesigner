@@ -953,6 +953,14 @@ class BulletFeature:
                     return prop_value.getValueAs("mm").Value
                 return float(prop_value)
 
+            def to_deg(prop_value):
+                """Convert angle property to degrees as float."""
+                if hasattr(prop_value, "getValueAs"):
+                    return prop_value.getValueAs("deg").Value
+                if hasattr(prop_value, "Value"):
+                    return float(prop_value.Value)
+                return float(prop_value)
+
             # Calculate volume from shape
             volume_mm3 = 0.0
             if obj.Shape:
@@ -996,6 +1004,20 @@ class BulletFeature:
                 float(obj.ActualWeight) if hasattr(obj, "ActualWeight") else 140.0
             )
             ogive_type = obj.OgiveType if hasattr(obj, "OgiveType") else "Tangent"
+            ogive_caliber_ratio = (
+                float(obj.OgiveCaliberRatio)
+                if hasattr(obj, "OgiveCaliberRatio")
+                else 7.0
+            )
+            boat_tail_angle_deg = (
+                to_deg(obj.BoatTailAngle) if hasattr(obj, "BoatTailAngle") else 0.0
+            )
+            boat_tail_length_mm = (
+                to_mm(obj.BoatTailLength) if hasattr(obj, "BoatTailLength") else 0.0
+            )
+            meplat_diameter_mm = (
+                to_mm(obj.MeplatDiameter) if hasattr(obj, "MeplatDiameter") else 0.0
+            )
             nose_type = str(obj.NoseType) if hasattr(obj, "NoseType") else "solid"
             hp_diameter_mm = (
                 to_mm(obj.HPDiameter) if hasattr(obj, "HPDiameter") else 0.0
@@ -1050,6 +1072,10 @@ class BulletFeature:
                 nose_type=nose_type,
                 hp_diameter_mm=hp_diameter_mm,
                 effective_diameter_mm=diameter_mm,
+                ogive_caliber_ratio=ogive_caliber_ratio,
+                boat_tail_angle_deg=boat_tail_angle_deg,
+                boat_tail_length_mm=boat_tail_length_mm,
+                meplat_diameter_mm=meplat_diameter_mm,
             )
             obj.BC_G1 = bc
 

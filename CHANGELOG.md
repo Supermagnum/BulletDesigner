@@ -11,10 +11,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Dynamic calculated tooltips for nose and tip inputs in both Task Panel and Ballistic Calculator
 - Documentation updates for nose and tip validation limits and severity behavior
 - Added BDLogo.svg logo file
+- Documentation for the geometry-based G1 BC model and environment-dependent corrections
 
 ### Changed
 - Clarified README feature descriptions for integrated hollow point and hollow point + tip workflows
 - Expanded user manual with current nose geometry, wall-thickness, and material-category constraints
+- Replaced static G1 BC form-factor constants with a geometry-derived model that includes Mach-regime, atmosphere, boat tail, and meplat corrections
 
 ### Removed
 - Deleted SMLogo.svg logo file

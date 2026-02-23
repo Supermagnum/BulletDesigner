@@ -336,6 +336,39 @@ The ballistic calculator helps you analyze bullet stability and performance.
   - Tip material velocity rating compared to muzzle velocity
   - Severity output: OK, WARNING, or ERROR
 
+### How G1 BC Is Now Estimated
+
+The BC auto-calculation now uses a geometry-first model instead of static
+form-factor constants.
+
+Base relation:
+
+`BC_G1 = SD / i`
+
+Where:
+- `SD` is sectional density
+- `i` is a computed form factor that includes:
+  - nose length ratio and ogive radius in calibers
+  - ogive-type influence and comparison to a G1/Mayewski-like reference shape
+  - boat tail angle and boat tail length reduction
+  - meplat penalty from `meplat_diameter / bullet_diameter`
+  - HP penalty for hollow point mode when applicable
+
+Velocity regime correction:
+- Mach is computed from muzzle velocity and local speed of sound
+- The form factor is adjusted for:
+  - subsonic regime (`Mach < 1.2`)
+  - transonic regime (`Mach 1.2-2.0`)
+  - supersonic regime (`Mach > 2.0`)
+
+Atmospheric correction:
+- Air density is computed from pressure and temperature
+- BC is scaled relative to ICAO standard atmosphere (`1013.25 hPa`, `15 C`)
+
+Practical effect:
+- BC values now move with geometry quality and environmental conditions,
+  rather than relying only on fixed lookup values.
+
 ## Trajectory & Transonic Calculator
 
 The Trajectory & Transonic Calculator provides detailed trajectory analysis including velocity decay, drop, spin drift, and transonic zone detection. This tool uses advanced RK4 numerical integration to simulate bullet flight through the atmosphere.

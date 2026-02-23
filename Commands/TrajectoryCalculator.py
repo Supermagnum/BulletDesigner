@@ -518,7 +518,26 @@ class TrajectoryCalculatorDialog(QtWidgets.QDialog):
             if self.bc_auto_checkbox.isChecked():
                 ogive_type = obj.OgiveType if hasattr(obj, "OgiveType") else "Tangent"
                 bc_g1 = calculate_ballistic_coefficient_g1(
-                    obj.Diameter, obj.Weight, obj.Length, ogive_type
+                    obj.Diameter,
+                    obj.Weight,
+                    obj.Length,
+                    ogive_type,
+                    ogive_caliber_ratio=(
+                        float(obj.OgiveCaliberRatio)
+                        if hasattr(obj, "OgiveCaliberRatio")
+                        else None
+                    ),
+                    boat_tail_angle_deg=(
+                        float(obj.BoatTailAngle) if hasattr(obj, "BoatTailAngle") else 0.0
+                    ),
+                    boat_tail_length_mm=(
+                        float(obj.BoatTailLength)
+                        if hasattr(obj, "BoatTailLength")
+                        else 0.0
+                    ),
+                    meplat_diameter_mm=(
+                        float(obj.MeplatDiameter) if hasattr(obj, "MeplatDiameter") else 0.0
+                    ),
                 )
                 self.bc_g1_spin.setValue(bc_g1)
     
@@ -545,7 +564,29 @@ class TrajectoryCalculatorDialog(QtWidgets.QDialog):
                 else:
                     ogive_type = "Tangent"
                 bc_g1 = calculate_ballistic_coefficient_g1(
-                    diameter_mm, weight_grains, length_mm, ogive_type
+                    diameter_mm,
+                    weight_grains,
+                    length_mm,
+                    ogive_type,
+                    velocity_mps=velocity_mps,
+                    temperature_c=temperature_c,
+                    pressure_hpa=pressure_hpa,
+                    ogive_caliber_ratio=(
+                        float(bullet_obj.OgiveCaliberRatio)
+                        if bullet_obj and hasattr(bullet_obj, "OgiveCaliberRatio")
+                        else None
+                    ),
+                    boat_tail_angle_deg=boat_tail_angle_deg,
+                    boat_tail_length_mm=(
+                        float(bullet_obj.BoatTailLength)
+                        if bullet_obj and hasattr(bullet_obj, "BoatTailLength")
+                        else 0.0
+                    ),
+                    meplat_diameter_mm=(
+                        float(bullet_obj.MeplatDiameter)
+                        if bullet_obj and hasattr(bullet_obj, "MeplatDiameter")
+                        else 0.0
+                    ),
                 )
                 self.bc_g1_spin.setValue(bc_g1)
             

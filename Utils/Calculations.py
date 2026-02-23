@@ -43,6 +43,13 @@ def calculate_ballistic_coefficient_g1(
     nose_type: str = "solid",
     hp_diameter_mm: float = 0.0,
     effective_diameter_mm: Optional[float] = None,
+    velocity_mps: Optional[float] = None,
+    temperature_c: float = 15.0,
+    pressure_hpa: float = 1013.25,
+    ogive_caliber_ratio: Optional[float] = None,
+    boat_tail_angle_deg: float = 0.0,
+    boat_tail_length_mm: float = 0.0,
+    meplat_diameter_mm: float = 0.0,
 ) -> float:
     """
     Estimate G1 ballistic coefficient using empirical formulas.
@@ -62,31 +69,101 @@ def calculate_ballistic_coefficient_g1(
     if diameter_mm <= 0 or weight_grains <= 0 or length_mm <= 0:
         return 0.0
 
+    def _clamp(value: float, lower: float, upper: float) -> float:
+        return max(lower, min(upper, value))
+
     # Convert to inches
     d_effective_mm = effective_diameter_mm if effective_diameter_mm else diameter_mm
-    diameter_inches = diameter_mm / 25.4
-    length_inches = length_mm / 25.4
+    d_effective_mm = max(d_effective_mm, 0.001)
 
     # Calculate sectional density
     sd = calculate_sectional_density(diameter_mm, weight_grains)
 
-    # Form factor estimation based on ogive type
-    # Lower form factor = better BC
-    form_factors = {"Tangent": 0.85, "Secant": 0.80, "Elliptical": 0.75}
-    form_factor = form_factors.get(ogive_type, 0.85)
+    # Geometry-derived form factor referenced to a Mayewski-like standard projectile.
+    # i < 1.0 generally improves BC, i > 1.0 worsens BC.
+    form_factor = 1.0
+
+    if ogive_caliber_ratio and ogive_caliber_ratio > 0:
+        ogive_length_mm = (ogive_caliber_ratio * d_effective_mm) / 2.0
+        ogive_radius_mm = calculate_ogive_radius(
+            ogive_caliber_ratio, d_effective_mm, ogive_type
+        )
+    else:
+        # Fallback estimate if detailed ogive ratio is not provided.
+        ogive_length_mm = max(0.0, length_mm * 0.45)
+        ogive_radius_mm = ogive_length_mm
+
+    nose_length_ratio = ogive_length_mm / d_effective_mm
+    ogive_radius_calibers = (
+        ogive_radius_mm / d_effective_mm if ogive_radius_mm > 0 else nose_length_ratio
+    )
+
+    # Compare to G1/Mayewski standard-like reference nose fineness.
+    mayewski_ref_nose_fineness = 3.28
+    mayewski_delta = (
+        (nose_length_ratio - mayewski_ref_nose_fineness) / mayewski_ref_nose_fineness
+    )
+    form_factor = form_factor * (
+        1.0 - 0.04 * _clamp(mayewski_delta, -1.0, 1.0)
+    )
+
+    # Additional geometry sensitivity from nose ratio and ogive radius.
+    nose_term = 1.0 - 0.045 * _clamp((nose_length_ratio - 3.0) / 4.0, -1.0, 1.0)
+    radius_term = 1.0 - 0.03 * _clamp((ogive_radius_calibers - 6.0) / 8.0, -1.0, 1.0)
+    form_factor = form_factor * nose_term * radius_term
+
+    # Keep mild ogive-type influence while letting geometry dominate.
+    ogive_type_factor = {"Tangent": 1.00, "Secant": 0.985, "Elliptical": 0.975}
+    form_factor = form_factor * ogive_type_factor.get(ogive_type, 1.00)
+
+    # Boat-tail correction typically reduces form factor by ~3-8%.
+    if boat_tail_angle_deg > 0.0 and boat_tail_length_mm > 0.0 and length_mm > 0.0:
+        angle_term = _clamp((boat_tail_angle_deg - 5.0) / 7.0, 0.0, 1.0)
+        length_ratio = boat_tail_length_mm / length_mm
+        length_term = _clamp(length_ratio / 0.20, 0.0, 1.0)
+        bt_reduction = 0.03 + 0.05 * ((0.6 * angle_term) + (0.4 * length_term))
+        form_factor = form_factor * (1.0 - bt_reduction)
+
+    # Meplat penalty: larger meplat increases drag.
+    if meplat_diameter_mm > 0.0:
+        meplat_ratio = meplat_diameter_mm / d_effective_mm
+        form_factor = form_factor * (1.0 + 0.22 * (meplat_ratio**1.4))
 
     # Hollow point form factor penalty (hp only)
     if nose_type == "hp" and hp_diameter_mm > 0 and d_effective_mm > 0:
         hp_ratio = hp_diameter_mm / d_effective_mm
         form_factor = form_factor * (1.0 + 0.15 * (hp_ratio**2))
 
-    # BC = SD / Form Factor
+    # Mach-regime correction since G1 BC varies with velocity.
+    mach = None
+    if velocity_mps is not None and velocity_mps > 0.0:
+        temp_k = temperature_c + 273.15
+        speed_of_sound = 331.3 * math.sqrt(max(temp_k, 1.0) / 273.15)
+        if speed_of_sound > 0.0:
+            mach = velocity_mps / speed_of_sound
+
+    if mach is not None:
+        if mach < 1.2:
+            mach_factor = 1.02 + 0.03 * _clamp((1.2 - mach) / 1.2, 0.0, 1.0)
+        elif mach <= 2.0:
+            blend = (mach - 1.2) / 0.8
+            mach_factor = 1.10 - 0.06 * _clamp(blend, 0.0, 1.0)
+        else:
+            mach_factor = 1.03
+        form_factor = form_factor * mach_factor
+
+    form_factor = max(0.40, min(form_factor, 1.80))
+
+    # BC = SD / i
     bc = sd / form_factor
 
-    # Apply length correction (longer bullets generally have better BC)
-    length_ratio = length_inches / diameter_inches
-    if length_ratio > 4.0:
-        bc *= 1.05  # Slight boost for long bullets
+    # Atmospheric density scaling relative to ICAO standard conditions.
+    # Higher actual density => lower effective BC in flight, and vice versa.
+    temp_k = temperature_c + 273.15
+    rho_actual = (pressure_hpa * 100.0) / (287.05 * max(temp_k, 1.0))
+    rho_std = (1013.25 * 100.0) / (287.05 * (15.0 + 273.15))
+    density_ratio = rho_actual / rho_std if rho_std > 0 else 1.0
+    bc = bc * (1.0 / _clamp(density_ratio, 0.6, 1.4))
 
     return round(bc, 3)
 

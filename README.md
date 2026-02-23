@@ -287,16 +287,27 @@ The effective diameter is the diameter at the bearing bands where the bullet eng
 
 ### Ballistic Coefficient (G1)
 
-Estimated G1 ballistic coefficient based on:
-- Sectional density: `SD = Weight (lbs) / Diameter² (inches)`
-- Form factor (based on ogive type):
-  - Tangent: 0.85
-  - Secant: 0.80
-  - Elliptical: 0.75
-- Length corrections for long bullets (>4:1 ratio)
-- Meplat and boat tail corrections
+Estimated G1 ballistic coefficient is computed from sectional density and a
+geometry-derived form factor, then corrected for velocity regime and atmosphere.
 
-**Formula:** `BC = SD / Form_Factor`
+Core relation:
+
+`BC_G1 = SD / i`
+
+Where:
+- `SD = Weight (lbs) / Diameter² (inches)`
+- `i` is computed from bullet geometry and flight conditions, including:
+  - nose length ratio and ogive radius in calibers
+  - comparison to a G1/Mayewski-style reference projectile
+  - boat tail angle and boat tail length
+  - meplat ratio (`meplat_diameter / bullet_diameter`)
+  - Mach regime correction (subsonic, transonic, supersonic)
+  - atmospheric density scaling relative to ICAO standard (1013.25 hPa, 15 C)
+
+Notes:
+- Hollow point (`hp`) still applies an HP-specific form factor penalty.
+- Hollow point + tip (`hp_tip`) uses tip geometry and effective meplat handling
+  without the HP penalty term.
 
 ### Sectional Density
 

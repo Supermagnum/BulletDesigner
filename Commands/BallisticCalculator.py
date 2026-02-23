@@ -575,6 +575,8 @@ class BallisticCalculatorDialog(QtWidgets.QDialog):
             tip_material = self.tip_material_combo.currentText()
             tip_density = self.tip_density_spin.value()
             ogive_caliber_ratio = 7.0
+            boat_tail_angle_for_bc = 0.0
+            boat_tail_length_for_bc = 0.0
 
             # Get effective diameter and material density
             effective_diameter = None
@@ -597,6 +599,10 @@ class BallisticCalculatorDialog(QtWidgets.QDialog):
                     material_density = float(bullet_obj.Density)
                 if hasattr(bullet_obj, "OgiveCaliberRatio"):
                     ogive_caliber_ratio = float(bullet_obj.OgiveCaliberRatio)
+                if hasattr(bullet_obj, "BoatTailAngle"):
+                    boat_tail_angle_for_bc = float(bullet_obj.BoatTailAngle)
+                if hasattr(bullet_obj, "BoatTailLength"):
+                    boat_tail_length_for_bc = float(bullet_obj.BoatTailLength)
             else:
                 # No bullet object selected - use material from combo box
                 material_db = get_material_database()
@@ -776,6 +782,13 @@ class BallisticCalculatorDialog(QtWidgets.QDialog):
                 nose_type=nose_type,
                 hp_diameter_mm=hp_diameter,
                 effective_diameter_mm=effective_diameter,
+                velocity_mps=velocity,
+                temperature_c=temperature,
+                pressure_hpa=pressure,
+                ogive_caliber_ratio=ogive_caliber_ratio,
+                boat_tail_angle_deg=boat_tail_angle_for_bc,
+                boat_tail_length_mm=boat_tail_length_for_bc,
+                meplat_diameter_mm=meplat_mm,
             )
             self.bc_label.setText(f"{bc:.3f}")
 
