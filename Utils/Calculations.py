@@ -66,14 +66,49 @@ def calculate_ballistic_coefficient_g1(
     Returns:
         Estimated G1 ballistic coefficient
     """
+    def _to_float(x, default=0.0):
+        """Convert FreeCAD Quantity or number to plain float to avoid unit mismatch."""
+        if x is None:
+            return default
+        try:
+            if hasattr(x, "getValueAs"):
+                try:
+                    return float(x.getValueAs("mm").Value)
+                except Exception:
+                    try:
+                        return float(x.getValueAs("deg").Value)
+                    except Exception:
+                        return float(x.Value)
+            if hasattr(x, "Value"):
+                return float(x.Value)
+            return float(x)
+        except Exception:
+            return default
+
+    diameter_mm = _to_float(diameter_mm, 0.0)
+    weight_grains = _to_float(weight_grains, 0.0)
+    length_mm = _to_float(length_mm, 0.0)
     if diameter_mm <= 0 or weight_grains <= 0 or length_mm <= 0:
         return 0.0
+
+    def _opt_float(x):
+        return None if x is None else _to_float(x, 0.0)
+
+    effective_diameter_mm = _opt_float(effective_diameter_mm)
+    velocity_mps = _opt_float(velocity_mps)
+    temperature_c = _to_float(temperature_c, 15.0)
+    pressure_hpa = _to_float(pressure_hpa, 1013.25)
+    ogive_caliber_ratio = _opt_float(ogive_caliber_ratio)
+    boat_tail_angle_deg = _to_float(boat_tail_angle_deg, 0.0)
+    boat_tail_length_mm = _to_float(boat_tail_length_mm, 0.0)
+    meplat_diameter_mm = _to_float(meplat_diameter_mm, 0.0)
+    hp_diameter_mm = _to_float(hp_diameter_mm, 0.0)
 
     def _clamp(value: float, lower: float, upper: float) -> float:
         return max(lower, min(upper, value))
 
     # Convert to inches
-    d_effective_mm = effective_diameter_mm if effective_diameter_mm else diameter_mm
+    d_effective_mm = effective_diameter_mm if effective_diameter_mm is not None else diameter_mm
     d_effective_mm = max(d_effective_mm, 0.001)
 
     # Calculate sectional density
