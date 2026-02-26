@@ -240,50 +240,50 @@ Examples:
 
 ### Stability Factor (Miller's Formula)
 
-The stability factor (Sg) indicates bullet stability using Miller's formula with modified thresholds for monolithic bullets.
+**CORRECTED FORMULA (4 Steps):**
 
-**CORRECTED FORMULA (3 Steps):**
-
-**Step 1: Basic Calculation**
+**Step 1: Derived dimensions**
 ```
 l = L / d_effective
 t = T / d_effective
+```
+
+**Step 2: Base stability**
+```
 Sg = (30 × m) / (t² × d_effective³ × l × (1 + l²))
 ```
 
-**Step 2: Velocity Correction**
+**Step 3: Velocity correction**
 ```
-Sg_corrected = Sg × (V_fps / 2800)^(1/3)
+Sg = Sg × (V_fps / 2800)^(1/3)
 ```
 
-**Step 3: Stability Threshold**
-- **Monolithic copper/brass bullets**: Sg_corrected ≥ 1.8 (stable)
-- **Lead-core bullets**: Sg_corrected ≥ 1.5 (stable)
-- **1.0 < Sg_corrected < threshold**: Marginally stable
-- **Sg_corrected < 1.0**: Unstable
+**Step 4: Atmospheric correction (temperature + pressure combined)**
+```
+f_tp = (29.92 / P_inHg) × ((T_F + 460) / 519)
+Sg_final = Sg × √f_tp
+```
+
+At standard conditions (59 F, 29.92 inHg), f_tp = 1.0 and no correction is applied. The temperature term increases stability at higher temperatures (less dense air); the pressure term increases stability at lower pressures (higher altitude). The square root of f_tp is applied to Sg.
+
+**Stability thresholds:**
+- **Monolithic copper/brass:** Sg_final ≥ 1.8
+- **Lead-core:** Sg_final ≥ 1.5
+- **1.0 < Sg_final < threshold:** Marginally stable
+- **Sg_final < 1.0:** Unstable
 
 **WHERE:**
 - `m` = bullet mass (grains)
 - `V_fps` = muzzle velocity (ft/sec)
 - `T` = twist rate (inches per turn)
-- `d_effective` = **effective bullet diameter** (inches) - **use bearing band diameter for land-riding bullets**
+- `d_effective` = effective bullet diameter (inches) — use band diameter for land-riding bullets
 - `l` = bullet length in calibers = L / d_effective
 - `L` = bullet length (inches)
 - `t` = twist rate in calibers per turn = T / d_effective
+- `P_inHg` = measured atmospheric pressure (inches of mercury)
+- `T_F` = measured temperature (Fahrenheit)
 
-**CRITICAL:** Use **d_effective** (band diameter), **NOT nominal diameter**.
-
-- For **land-riding bullets**: `d_effective` = band diameter (typically 6.5-6.6 mm, **NOT** 6.7 mm nominal)
-- For **groove-riding bullets**: `d_effective` = nominal diameter
-
-The effective diameter is the diameter at the bearing bands where the bullet engages the rifling.
-
-**Atmospheric Corrections:**
-- Temperature correction: `√((T_F + 459.67) / 518.67)`
-- Pressure correction: `√(P_inHg / 29.92)`
-- Applied after velocity correction
-
-**Sources:** Litz, Applied Ballistics; Courtney & Courtney (2012)
+**Sources:** Litz, Applied Ballistics; Miller; Courtney & Courtney (2012)
 
 ### Ballistic Coefficient (G1)
 
@@ -354,14 +354,19 @@ The ogive curve is calculated mathematically based on the selected ogive type (t
 
 ### Recommended Twist Rate
 
-**For Monolithic Copper/Brass Bullets:**
+**For Monolithic Copper/Brass Bullets (inverted Miller, Sg_target = 1.8):**
 ```
-T_required = d_effective × √[(30 × m) / (1.8 × d_effective³ × l × (1 + l²))] × (2800/V)^(1/6)
+T_required = d_effective × √[(30 × m) / (1.8 × d_effective³ × l × (1 + l²))] × (2800 / V_fps)^(1/6)
 ```
+With atmospheric correction applied to the required twist:
+```
+T_corrected = T_required × √f_tp
+```
+where `f_tp = (29.92 / P_inHg) × ((T_F + 460) / 519)`.
 
-**For Lead-Core Bullets (Greenhill Formula):**
-- Standard (V ≤ 2800 fps): `T = 150 × d_effective² / L`
-- High velocity (V > 2800 fps): `T = 150 × d_effective² / L × √(V/2800)`
+**For Lead-Core Bullets (Greenhill):**
+- V ≤ 2800 fps: `T = 150 × d_effective² / L`
+- V > 2800 fps: `T = 150 × d_effective² / L × √(V / 2800)`
 
 Where:
 - `T` = twist rate (inches per turn)
@@ -448,17 +453,19 @@ Where:
 
 RK4 integration with time step `dt = 0.001` seconds.
 
-#### Spin Drift (Litz Formula)
+#### Spin Drift (Litz Formula) — Correct form
 
-```
-drift_inches = 1.25 × (SG + 1.2) × (bullet_length_calibers^1.83)
-```
+**WRONG (do not use):** `drift_inches = 1.25 × (Sg + 1.2) × (bullet_length_calibers^1.83)` — the exponent 1.83 applies to **time of flight**, not length in calibers. Using length in calibers produces incorrect drift values.
 
+**CORRECT:**
+```
+drift_inches = 1.25 × (Sg + 1.2) × (ToF^1.83)
+```
 Where:
-- `SG` = Miller stability factor
-- `bullet_length_calibers` = L / d (length in calibers)
+- `Sg` = Miller stability factor (at muzzle)
+- `ToF` = time of flight in seconds to the target
 
-Drift accumulates with range and is converted to millimeters for display.
+Drift is cumulative with time and converted to millimeters for display.
 
 #### BC Truing Factor
 

@@ -317,13 +317,10 @@ The ballistic calculator helps you analyze bullet stability and performance.
 
 ### Understanding Results
 
-- **Stability Factor (Sg)**: 
-  - **> 1.5**: Stable (good)
-  - **1.0 - 1.5**: Marginally stable
-  - **< 1.0**: Unstable (will tumble)
+- **Stability Factor (Sg)**: Miller formula (4 steps): derived dimensions, base Sg, velocity correction, then atmospheric correction Sg_final = Sg x sqrt(f_tp) with f_tp = (29.92 / P_inHg) x ((T_F + 460) / 519). Monolithic copper/brass: stable if Sg_final >= 1.8; lead-core: stable if Sg_final >= 1.5.
 - **Ballistic Coefficient (BC)**: Higher is better (less drag)
 - **Sectional Density**: Weight per unit of frontal area
-- **Recommended Twist Rate**: Calculated using Greenhill formula
+- **Recommended Twist Rate**: Miller (monolithic) or Greenhill (lead-core); T_corrected = T_required x sqrt(f_tp)
 - **Nose-Corrected Results**:
   - Mass removed by cavity
   - Mass added by tip
@@ -419,7 +416,7 @@ The calculator displays a table with trajectory data at 100-meter intervals:
 - **Velocity (m/s)**: Bullet velocity at that range
 - **Mach**: Mach number (velocity / speed of sound)
 - **Drop (cm)**: Bullet drop below line of sight (in centimeters)
-- **Spin Drift (mm)**: Lateral drift due to bullet spin (cumulative in millimeters)
+- **Spin Drift (mm)**: Lateral drift (Litz: drift_inches = 1.25 x (Sg + 1.2) x ToF^1.83; exponent is on time of flight in seconds, not length in calibers; cumulative in mm)
 - **Time (s)**: Time of flight to that range
 
 **Summary Information:**
@@ -676,7 +673,7 @@ This manual is for Bullet Designer version 1.0.0 and FreeCAD 0.21+.
 - Added Trajectory & Transonic Calculator with RK4 integration
 - G7 ballistic coefficient conversion
 - Transonic zone detection and stability warnings
-- Spin drift calculation using Litz formula
+- Stability: Miller 4-step formula with Sg_final = Sg x sqrt(f_tp). Twist: T_corrected = T_required x sqrt(f_tp). Spin drift: Litz with ToF^1.83 (not length in calibers).
 
 ---
 

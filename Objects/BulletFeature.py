@@ -992,6 +992,9 @@ class BulletFeature:
 
             # Get property values as floats
             diameter_mm = to_mm(obj.Diameter) if hasattr(obj, "Diameter") else 6.7
+            land_diameter_mm = (
+                to_mm(obj.LandDiameter) if hasattr(obj, "LandDiameter") else None
+            )
             length_mm = to_mm(obj.Length) if hasattr(obj, "Length") else 32.0
             num_bands = int(obj.NumBands) if hasattr(obj, "NumBands") else 4
             band_length_mm = (
@@ -1079,9 +1082,16 @@ class BulletFeature:
             )
             obj.BC_G1 = bc
 
-            # Calculate recommended twist
+            # Calculate recommended twist (standard atmosphere; no env props on bullet)
             twist_rate, twist_str = calculate_recommended_twist_rate(
-                diameter_mm, length_mm, weight_grains
+                diameter_mm,
+                length_mm,
+                weight_grains,
+                velocity_mps=853.0,
+                effective_diameter_mm=land_diameter_mm if land_diameter_mm else None,
+                material_density_g_per_cm3=density,
+                temperature_c=15.0,
+                pressure_hpa=1013.25,
             )
             obj.RecommendedTwist = twist_str
 

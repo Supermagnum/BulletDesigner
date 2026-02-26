@@ -796,7 +796,7 @@ class BallisticCalculatorDialog(QtWidgets.QDialog):
             sd = calculate_sectional_density(diameter, weight)
             self.sd_label.setText(f"{sd:.3f}")
 
-            # Calculate recommended twist
+            # Calculate recommended twist (with Miller temp/pressure correction)
             twist_rate, twist_str = calculate_recommended_twist_rate(
                 diameter,
                 length,
@@ -804,6 +804,8 @@ class BallisticCalculatorDialog(QtWidgets.QDialog):
                 velocity,
                 effective_diameter_mm=effective_diameter,
                 material_density_g_per_cm3=material_density,
+                temperature_c=temperature,
+                pressure_hpa=pressure,
             )
             self.recommended_twist_label.setText(twist_str)
 

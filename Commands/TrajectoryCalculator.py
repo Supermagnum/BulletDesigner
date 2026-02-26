@@ -161,44 +161,22 @@ def calculate_speed_of_sound(temperature_c: float) -> float:
     return c
 
 
-def calculate_spin_drift(stability_factor: float, length_mm: float, diameter_mm: float, range_m: float) -> float:
+def calculate_spin_drift(stability_factor: float, time_of_flight_s: float) -> float:
     """
-    Calculate spin drift using Litz empirical formula.
-    
-    drift_inches = 1.25 * (SG + 1.2) * (bullet_length_calibers ** 1.83)
-    
-    Converted to mm per 100m interval for display.
-    
+    Spin drift (Litz): drift_inches = 1.25 * (Sg + 1.2) * (ToF ** 1.83).
+    Exponent 1.83 applies to time of flight in seconds, not length in calibers.
+
     Args:
-        stability_factor: Miller stability factor (SG)
-        length_mm: Bullet length in mm
-        diameter_mm: Bullet diameter in mm
-        range_m: Range in meters
-        
+        stability_factor: Miller stability factor (Sg, at muzzle)
+        time_of_flight_s: Time of flight in seconds to the target
+
     Returns:
-        Spin drift in millimeters (cumulative at this range)
+        Spin drift in millimeters (cumulative at this ToF)
     """
-    if diameter_mm <= 0 or length_mm <= 0:
+    if time_of_flight_s < 0:
         return 0.0
-    
-    # Convert to inches and calibers
-    length_inches = length_mm / 25.4
-    diameter_inches = diameter_mm / 25.4
-    bullet_length_calibers = length_inches / diameter_inches
-    
-    # Litz formula (gives drift per 100 yards, converted to per 100m)
-    # Formula gives drift in inches per 100 yards
-    drift_per_100yd_inches = 1.25 * (stability_factor + 1.2) * (bullet_length_calibers ** 1.83)
-    
-    # Convert to mm per 100m
-    # 100 yards = 91.44 meters
-    drift_per_100m_mm = (drift_per_100yd_inches * 25.4) * (100.0 / 91.44)
-    
-    # Scale by range (drift accumulates with range)
-    # Approximate: drift increases roughly quadratically with range
-    drift_at_range = drift_per_100m_mm * (range_m / 100.0) ** 1.5
-    
-    return drift_at_range
+    drift_inches = 1.25 * (stability_factor + 1.2) * (time_of_flight_s ** 1.83)
+    return drift_inches * 25.4  # inches to mm
 
 
 def trajectory_derivatives(state, rho, A, m_kg, i7, c):
@@ -272,9 +250,9 @@ def integrate_trajectory_rk4(
         i7: G7 form factor (SD / BC_G7)
         c: Speed of sound (m/s)
         max_range_m: Maximum range to calculate (m)
-        stability_factor: Miller stability factor for spin drift calculation
-        length_mm: Bullet length in mm
-        diameter_mm: Bullet diameter in mm
+        stability_factor: Miller stability factor for spin drift (Litz ToF formula)
+        length_mm: Bullet length in mm (kept for API compatibility)
+        diameter_mm: Bullet diameter in mm (kept for API compatibility)
         min_velocity_mps: Minimum velocity threshold (default 50 m/s)
         
     Returns:
@@ -325,7 +303,7 @@ def integrate_trajectory_rk4(
         # Output at 100m intervals
         if x - last_output_range >= 100.0:
             drop_cm = -y * 100.0  # Convert m to cm
-            spin_drift_mm = calculate_spin_drift(stability_factor, length_mm, diameter_mm, x)
+            spin_drift_mm = calculate_spin_drift(stability_factor, t)
             trajectory_points.append((x, v, mach, drop_cm, spin_drift_mm, t))
             last_output_range = x
     

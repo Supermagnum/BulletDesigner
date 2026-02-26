@@ -203,6 +203,17 @@ def calculate_ballistic_coefficient_g1(
     return round(bc, 3)
 
 
+def _f_tp_miller(pressure_inhg: float, temperature_fahrenheit: float) -> float:
+    """
+    Atmospheric correction factor (Miller): f_tp = (29.92 / P_inHg) x ((T_F + 460) / 519).
+    At standard conditions (59 F, 29.92 inHg), f_tp = 1.0.
+    """
+    if pressure_inhg <= 0:
+        return 1.0
+    p_std = 29.92
+    return (p_std / pressure_inhg) * ((temperature_fahrenheit + 460.0) / 519.0)
+
+
 def calculate_recommended_twist_rate(
     diameter_mm: float,
     length_mm: float,
@@ -210,12 +221,15 @@ def calculate_recommended_twist_rate(
     velocity_mps: float = 853.0,
     effective_diameter_mm: Optional[float] = None,
     material_density_g_per_cm3: Optional[float] = None,
+    temperature_c: float = 15.0,
+    pressure_hpa: float = 1013.25,
 ) -> Tuple[float, str]:
     """
     Calculate recommended barrel twist rate using Greenhill formula or Miller-based formula.
 
-    For monolithic copper/brass bullets, uses Miller-based required twist calculation:
-    T_required = d_effective × √[(30 × m) / (1.8 × d_effective³ × l × (1 + l²))] × (2800/V)^(1/6)
+    For monolithic copper/brass (inverted Miller, Sg_target = 1.8):
+    T_required = d_effective x sqrt[(30 x m) / (1.8 x d_effective^3 x l x (1 + l^2))] x (2800/V_fps)^(1/6)
+    T_corrected = T_required x sqrt(f_tp), where f_tp = (29.92 / P_inHg) x ((T_F + 460) / 519).
 
     For lead-core bullets, uses Greenhill formula:
     T = 150 * D^2 / L (or with velocity correction for V > 2800 fps)
@@ -294,6 +308,12 @@ def calculate_recommended_twist_rate(
                 150.0 * (d_effective_inches**2) / length_inches * velocity_factor
             )
 
+    # Atmospheric correction: T_corrected = T_required x sqrt(f_tp)
+    temp_f = (temperature_c * 9.0 / 5.0) + 32.0
+    pressure_inhg = pressure_hpa * 0.0295299830714
+    f_tp = _f_tp_miller(pressure_inhg, temp_f)
+    twist_rate = twist_rate * math.sqrt(f_tp)
+
     # Round to nearest reasonable value (typically 7, 8, 9, 10, 12, 14)
     twist_rate = round(twist_rate)
 
@@ -317,21 +337,15 @@ def calculate_stability_factor_miller(
     corrected_mass_grains: Optional[float] = None,
 ) -> Tuple[float, float]:
     """
-    Calculate stability factor using Miller's formula.
+    Calculate stability factor using Miller's formula (4 steps).
 
-    CORRECTED FORMULA (3 steps):
+    Step 1: Derived dimensions: l = L/d_effective, t = T/d_effective.
+    Step 2: Base stability: Sg = (30 x m) / (t^2 x d_effective^3 x l x (1 + l^2)).
+    Step 3: Velocity correction: Sg = Sg x (V_fps / 2800)^(1/3).
+    Step 4: Atmospheric correction: f_tp = (29.92 / P_inHg) x ((T_F + 460) / 519),
+            Sg_final = Sg x sqrt(f_tp). At standard conditions (59 F, 29.92 inHg), f_tp = 1.0.
 
-    Step 1: Basic calculation
-    l = L / d_effective
-    t = T / d_effective
-    Sg = (30 × m) / (t² × d_effective³ × l × (1 + l²))
-
-    Step 2: Velocity correction
-    Sg_corrected = Sg × (V_fps / 2800)^(1/3)
-
-    Step 3: Stability threshold
-    Monolithic copper/brass: Sg_corrected ≥ 1.8
-    Lead-core bullets: Sg_corrected ≥ 1.5
+    Stability thresholds: Monolithic copper/brass Sg_final >= 1.8; lead-core >= 1.5.
 
     WHERE:
     - m = bullet mass (grains)
@@ -430,21 +444,11 @@ def calculate_stability_factor_miller(
         velocity_correction = 1.0
     stability = stability * velocity_correction
 
-    # Convert metric inputs to imperial for atmospheric corrections
-    # Temperature: Celsius to Fahrenheit
+    # Step 4: Atmospheric correction: f_tp = (29.92/P_inHg) x ((T_F+460)/519), Sg_final = Sg x sqrt(f_tp)
     temperature_f = (temperature_c * 9.0 / 5.0) + 32.0
-    # Pressure: hPa to inHg (1 hPa = 0.0295299830714 inHg)
     pressure_inhg = pressure_hpa * 0.0295299830714
-
-    # Temperature correction (formula uses Rankine: F + 459.67)
-    # Standard reference: 59°F = 518.67°R
-    temp_correction = math.sqrt((temperature_f + 459.67) / 518.67)
-
-    # Pressure correction (standard is 29.92 inHg)
-    pressure_correction = math.sqrt(pressure_inhg / 29.92)
-
-    # Apply atmospheric corrections
-    stability = stability * temp_correction * pressure_correction
+    f_tp = _f_tp_miller(pressure_inhg, temperature_f)
+    stability = stability * math.sqrt(f_tp)
 
     # Round to 2 decimal places for display
     return (round(stability, 2), stability_threshold)
