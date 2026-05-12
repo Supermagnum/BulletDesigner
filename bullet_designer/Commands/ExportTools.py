@@ -2,9 +2,12 @@
 Export tools for bullet objects.
 """
 
+import os
+
 import FreeCAD as App
 import FreeCADGui as Gui
-import os
+
+from bullet_designer import WB_ROOT
 
 
 class ExportSTLCommand:
@@ -14,10 +17,9 @@ class ExportSTLCommand:
     
     def __init__(self):
         """Initialize the command."""
-        wb_path = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
         self.resources = {
             "Pixmap": os.path.join(
-                wb_path, "Resources", "icons", "Export.svg"
+                WB_ROOT, "Resources", "icons", "Export.svg"
             ),
             "MenuText": "Export to STL",
             "ToolTip": "Export selected bullet to STL file",
@@ -45,7 +47,7 @@ class ExportSTLCommand:
             return
         
         # Use FreeCAD's export dialog
-        from PySide2 import QtWidgets
+        from PySide import QtWidgets
         filename, _ = QtWidgets.QFileDialog.getSaveFileName(
             None,
             "Export STL",
@@ -70,10 +72,9 @@ class ExportSTEPCommand:
     
     def __init__(self):
         """Initialize the command."""
-        wb_path = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
         self.resources = {
             "Pixmap": os.path.join(
-                wb_path, "Resources", "icons", "Export.svg"
+                WB_ROOT, "Resources", "icons", "Export.svg"
             ),
             "MenuText": "Export to STEP",
             "ToolTip": "Export selected bullet to STEP file",
@@ -101,7 +102,7 @@ class ExportSTEPCommand:
             return
         
         # Use FreeCAD's export dialog
-        from PySide2 import QtWidgets
+        from PySide import QtWidgets
         filename, _ = QtWidgets.QFileDialog.getSaveFileName(
             None,
             "Export STEP",

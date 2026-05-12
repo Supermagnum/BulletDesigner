@@ -8,7 +8,7 @@ including stability, ballistic coefficient, sectional density, and twist rates.
 import math
 from typing import Optional, Tuple, Dict
 
-from Utils.MaterialDatabase import get_material_database
+from bullet_designer.Utils.MaterialDatabase import get_material_database
 
 
 def calculate_sectional_density(diameter_mm: float, weight_grains: float) -> float:

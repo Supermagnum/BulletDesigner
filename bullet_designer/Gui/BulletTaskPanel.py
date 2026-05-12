@@ -5,24 +5,20 @@ This module provides a GUI panel for editing bullet parameters
 with real-time preview updates.
 """
 
+import os
+
 import FreeCAD as App
 import FreeCADGui as Gui
-from PySide2 import QtWidgets, QtCore
-import os
-import sys
+from PySide import QtCore, QtWidgets
 
-# Add Utils to path
-wb_path = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
-sys.path.insert(0, os.path.join(wb_path, "Utils"))
-
-from Utils.MaterialDatabase import get_material_database
-from Utils.Calculations import (
+from bullet_designer.Utils.Calculations import (
     calculate_bullet_dimensions_from_weight,
-    validate_hp_diameter,
     calculate_hp_depth_limits,
-    validate_tip_design,
     min_wall_thickness,
+    validate_hp_diameter,
+    validate_tip_design,
 )
+from bullet_designer.Utils.MaterialDatabase import get_material_database
 
 
 class BulletTaskPanel:

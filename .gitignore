@@ -29,3 +29,7 @@ Thumbs.db
 *.egg-info/
 dist/
 build/
+
+# Optional large example payloads (omit from Addon Manager / git clones)
+examples/*.FCStd
+examples/*.pdf

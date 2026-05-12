@@ -5,31 +5,26 @@ This module implements the FeaturePython object that represents a bullet
 with all its parametric properties.
 """
 
+import os
+
 import FreeCAD as App
 import Part
-import os
-import sys
 
-# Add Utils to path
-wb_path = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
-sys.path.insert(0, os.path.join(wb_path, "Utils"))
-sys.path.insert(0, os.path.join(wb_path, "Objects"))
-
-from Utils.GeometryHelpers import (
-    generate_bullet_profile_points,
-    create_bullet_solid,
-    validate_bullet_parameters,
-)
-from Utils.Calculations import (
-    calculate_weight_from_volume,
-    calculate_sectional_density,
+from bullet_designer.Utils.Calculations import (
     calculate_ballistic_coefficient_g1,
-    calculate_recommended_twist_rate,
     calculate_bearing_surface,
     calculate_bullet_dimensions_from_weight,
     calculate_nose_configuration,
+    calculate_recommended_twist_rate,
+    calculate_sectional_density,
+    calculate_weight_from_volume,
 )
-from Utils.MaterialDatabase import get_material_database
+from bullet_designer.Utils.GeometryHelpers import (
+    create_bullet_solid,
+    generate_bullet_profile_points,
+    validate_bullet_parameters,
+)
+from bullet_designer.Utils.MaterialDatabase import get_material_database
 
 
 class BulletFeature:
@@ -1548,7 +1543,7 @@ def makeBulletFeature(name="Bullet"):
 
     # Set view provider
     if App.GuiUp:
-        from Objects.ViewProviders import ViewProviderBullet
+        from bullet_designer.Objects.ViewProviders import ViewProviderBullet
 
         ViewProviderBullet(obj.ViewObject)
 

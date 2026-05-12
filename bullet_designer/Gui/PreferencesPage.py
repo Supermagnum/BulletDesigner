@@ -2,17 +2,13 @@
 Preferences page for Bullet Designer workbench.
 """
 
+import os
+
 import FreeCAD as App
 import FreeCADGui as Gui
-from PySide2 import QtWidgets, QtCore
-import os
-import sys
+from PySide import QtCore, QtWidgets
 
-# Add Utils to path
-wb_path = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
-sys.path.insert(0, os.path.join(wb_path, "Utils"))
-
-from Utils.MaterialDatabase import get_material_database
+from bullet_designer.Utils.MaterialDatabase import get_material_database
 
 
 class BulletDesignerPreferencesPage:

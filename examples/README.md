@@ -2,6 +2,8 @@
 
 Example FreeCAD documents and PDF drawings for the Bullet Designer workbench.
 
+Addon Manager installs intentionally omit large `.FCStd` and `.pdf` binaries to keep packages small. Clone the git repository or use published release assets if your copy of this folder does not include those files.
+
 ## Example Files
 
 ### FreeCAD Documents (.FCStd)

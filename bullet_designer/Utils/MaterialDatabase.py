@@ -6,8 +6,11 @@ This module loads and manages material properties for bullet design.
 
 import json
 import os
+
 import FreeCAD as App
 from typing import Dict, List, Optional
+
+from bullet_designer import WB_ROOT
 
 
 class MaterialDatabase:
@@ -25,8 +28,7 @@ class MaterialDatabase:
     def _load_materials(self):
         """Load materials from JSON file."""
         try:
-            wb_path = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
-            materials_file = os.path.join(wb_path, "Data", "materials.json")
+            materials_file = os.path.join(WB_ROOT, "Data", "materials.json")
 
             if os.path.exists(materials_file):
                 with open(materials_file, "r") as f:

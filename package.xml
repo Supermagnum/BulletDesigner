@@ -4,9 +4,9 @@
     <description>Parametric bullet design workbench with ballistic and trajectory tools.</description>
     <version>1.0.0</version>
     <date>2026-02-16</date>
-    <maintainer email="maintainer@example.com">Bullet Designer Team</maintainer>
+    <maintainer email="hakuntheeril@gmail.com">Bullet Designer Team</maintainer>
     <author>Bullet Designer Team</author>
-    <license>MIT</license>
+    <license file="LICENSE">MIT</license>
     <url type="repository">https://github.com/Supermagnum/BulletDesigner</url>
     <url type="readme">https://github.com/Supermagnum/BulletDesigner/blob/main/README.md</url>
     <url type="documentation">https://github.com/Supermagnum/BulletDesigner/blob/main/USER_MANUAL.md</url>
@@ -15,9 +15,9 @@
         <workbench>
             <classname>BulletDesignerWorkbench</classname>
             <subdirectory>./</subdirectory>
+            <freecadmin>0.21</freecadmin>
+            <pythonmin>3.8</pythonmin>
         </workbench>
-        <freecaddependency>0.21</freecaddependency>
-        <pythonminversion>3.8</pythonminversion>
     </content>
     <category>Product Design</category>
     <tag>ballistics</tag>

@@ -5,29 +5,26 @@ This command opens a dialog for calculating ballistic properties
 including stability, BC, and twist rate recommendations.
 """
 
+import os
+
 import FreeCAD as App
 import FreeCADGui as Gui
-from PySide2 import QtWidgets
-import os
-import sys
+from PySide import QtWidgets
 
-# Add Utils to path
-wb_path = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
-sys.path.insert(0, os.path.join(wb_path, "Utils"))
-
-from Utils.Calculations import (
-    calculate_stability_factor_miller,
+from bullet_designer.Utils.Calculations import (
     calculate_ballistic_coefficient_g1,
-    calculate_sectional_density,
-    calculate_recommended_twist_rate,
-    calculate_nose_configuration,
-    check_tip_velocity_limit,
-    validate_hp_diameter,
     calculate_hp_depth_limits,
-    validate_tip_design,
+    calculate_nose_configuration,
+    calculate_recommended_twist_rate,
+    calculate_sectional_density,
+    calculate_stability_factor_miller,
+    check_tip_velocity_limit,
     min_wall_thickness,
+    validate_hp_diameter,
+    validate_tip_design,
 )
-from Utils.MaterialDatabase import get_material_database
+from bullet_designer import WB_ROOT
+from bullet_designer.Utils.MaterialDatabase import get_material_database
 
 # Units: 0 = Metric (m/s, Celsius, hPa), 1 = Imperial (fps, Fahrenheit, inHg)
 PREF_GROUP = "User parameter:BaseApp/Preferences/Mod/BulletDesigner"
@@ -868,9 +865,8 @@ class BallisticCalculatorCommand:
 
     def __init__(self):
         """Initialize the command."""
-        wb_path = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
         self.resources = {
-            "Pixmap": os.path.join(wb_path, "Resources", "icons", "Calculator.svg"),
+            "Pixmap": os.path.join(WB_ROOT, "Resources", "icons", "Calculator.svg"),
             "MenuText": "Ballistic Calculator",
             "ToolTip": "Calculate ballistic properties and stability",
             "Accel": "C",

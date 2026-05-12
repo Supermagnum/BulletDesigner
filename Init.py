@@ -11,7 +11,7 @@ import os
 # Version information
 __version__ = "1.0.0"
 __author__ = "Bullet Designer Team"
-__date__ = "2025-02-16"
+__date__ = "2026-02-16"
 
 # Workbench directory - handle case where __file__ might not be defined
 try:

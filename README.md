@@ -103,7 +103,7 @@ This approach creates a **smooth, continuous arc** without visible sectional lin
 
 1. Clone or download this repository
 2. Copy the `BulletDesigner` folder to your FreeCAD Mods directory:
-   - **Linux**: `~/.FreeCAD/Mod/`
+   - **Linux**: typically `~/.local/share/FreeCAD/Mod/` (or legacy `~/.FreeCAD/Mod/`)
    - **Windows**: `C:\Users\<username>\AppData\Roaming\FreeCAD\Mod\`
    - **macOS**: `~/Library/Preferences/FreeCAD/Mod/`
 3. Restart FreeCAD
@@ -208,7 +208,7 @@ Examples:
 - **Band Spacing**: Space between bands in mm
 - **Band Diameter**: Usually equals groove diameter
 
-**CRITICAL**: Bands must fit within the body length (total length minus ogive and boat tail), or a solid will not be generated. See [Important Constraints](#-important-bands-must-fit-on-bullet) above.
+**CRITICAL**: Bands must fit within the body length (total length minus ogive and boat tail), or a solid will not be generated. See [Important Constraints](#important-bands-must-fit-on-bullet) above.
 
 ### Base Configuration
 
@@ -508,38 +508,24 @@ BulletDesigner/
 ├── package.xml            # Addon metadata
 ├── README.md              # This file
 ├── LICENSE                # MIT License
-├── Commands/              # Command implementations
-│   ├── CreateBullet.py
-│   ├── BallisticCalculator.py
-│   ├── TrajectoryCalculator.py
-│   ├── BallisticCalculator.py
-│   ├── BulletLibrary.py
-│   └── ExportTools.py
-├── Objects/               # Feature objects
-│   ├── BulletFeature.py
-│   └── ViewProviders.py
-├── Gui/                   # GUI components
-│   ├── BulletTaskPanel.py
-│   └── PreferencesPage.py
-├── Utils/                 # Utilities
-│   ├── Calculations.py
-│   ├── MaterialDatabase.py
-│   └── GeometryHelpers.py
+├── bullet_designer/       # Python package (all workbench modules)
+│   ├── Commands/
+│   ├── Gui/
+│   ├── Objects/
+│   └── Utils/
 ├── Resources/
 │   ├── icons/             # SVG icons
 │   └── ui/               # UI files (future)
-└── Data/                  # Data files
-    ├── materials.json
-    └── bullet_templates.json
-├── examples/              # Example files
-    ├── README.md          # Examples documentation
-    ├── *.FCStd           # Example FreeCAD bullet designs
-    └── *.pdf             # PDF technical drawings
+├── Data/
+│   ├── materials.json
+│   └── bullet_templates.json
+└── examples/             # Documentation (optional large samples via git or releases)
+    └── README.md
 ```
 
 ## Examples
 
-Example bullet designs and PDF drawings are available in the `examples/` directory:
+Example descriptions for bullet designs are documented in [`examples/README.md`](examples/README.md). Large sample `.FCStd` and `.pdf` files are intentionally **not** included in the Addon Manager package to keep downloads small; obtain them from a full clone of the repository or from project releases if published there.
 
 - **FreeCAD Documents (.FCStd)**: Ready-to-use bullet designs you can open, modify, and learn from
   - 6.5mm bore riding 140 gr
@@ -550,8 +536,6 @@ Example bullet designs and PDF drawings are available in the `examples/` directo
   - 140gr bore rider 6.5mm
   - 150gr bore rider 6.5mm
 
-See [examples/README.md](examples/README.md) for detailed descriptions of each example file.
-
 **Note:** Example `.FCStd` files may use older stability formulas. Use the current Ballistic Calculator to recalculate stability with the updated formulas.
 
 ## Prerequisites / Dependencies
@@ -559,12 +543,12 @@ See [examples/README.md](examples/README.md) for detailed descriptions of each e
 ### Required Software
 - **FreeCAD**: Version 0.21 or later (stable release)
 - **Python**: Version 3.8 or later (included with FreeCAD)
-- **PySide2**: Included with FreeCAD (Qt5 compatible)
+- **Qt / PySide**: Provided by FreeCAD via the `PySide` compatibility layer (works with Qt5/PySide2 and Qt6/PySide6 builds)
 
 ### Compatibility
-- Compatible with FreeCAD 0.21 stable release and later
-- Uses PySide2 (Qt5), not PySide (Qt6)
-- No third-party Python dependencies required (uses only Python standard library: math, bisect, os, sys)
+- Compatible with FreeCAD 0.21 stable release and later (including Qt6-based builds such as FreeCAD 1.1 when using the workbench's `PySide` imports)
+- GUI code uses `from PySide import ...` as recommended for add-ons, not `PySide2` directly
+- No third-party Python dependencies required (uses only Python standard library modules such as `math`, `bisect`, `json`, `typing`, `os`, `sys`)
 - No numpy, scipy, or other external libraries required
 
 ### Backward Compatibility
@@ -607,7 +591,7 @@ For issues, questions, or feature requests, please use the GitHub issue tracker.
 
 ## Version History
 
-### Version 1.0.0 (19 FEB 2026)
+### Version 1.0.0 (2026-02-16)
 - Initial release
 - Parametric bullet creation
 - Ballistic calculator

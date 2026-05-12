@@ -45,58 +45,64 @@ class BulletDesignerWorkbench(Gui.Workbench):
         commands_loaded = []
         
         try:
-            from Commands import CreateBullet
+            from bullet_designer.Commands import CreateBullet  # noqa: F401
+
             commands_loaded.append("CreateBullet")
             # Verify command was registered
             if Gui.Command.get("BulletDesigner_CreateBullet"):
-                App.Console.PrintLog("  ✓ CreateBullet loaded and registered\n")
+                App.Console.PrintLog("  CreateBullet loaded and registered\n")
             else:
-                App.Console.PrintWarning("  ⚠ CreateBullet imported but not registered\n")
+                App.Console.PrintWarning("  CreateBullet imported but not registered\n")
         except Exception as e:
-            App.Console.PrintError(f"  ✗ Failed to import CreateBullet: {e}\n")
+            App.Console.PrintError(f"  Failed to import CreateBullet: {e}\n")
             import traceback
             App.Console.PrintError(traceback.format_exc())
         
         try:
-            from Commands import BallisticCalculator
+            from bullet_designer.Commands import BallisticCalculator  # noqa: F401
+
             commands_loaded.append("BallisticCalculator")
-            App.Console.PrintLog("  ✓ BallisticCalculator loaded\n")
+            App.Console.PrintLog("  BallisticCalculator loaded\n")
         except Exception as e:
-            App.Console.PrintError(f"  ✗ Failed to import BallisticCalculator: {e}\n")
+            App.Console.PrintError(f"  Failed to import BallisticCalculator: {e}\n")
             import traceback
             App.Console.PrintError(traceback.format_exc())
         
         try:
-            from Commands import TrajectoryCalculator
+            from bullet_designer.Commands import TrajectoryCalculator  # noqa: F401
+
             commands_loaded.append("TrajectoryCalculator")
-            App.Console.PrintLog("  ✓ TrajectoryCalculator loaded\n")
+            App.Console.PrintLog("  TrajectoryCalculator loaded\n")
         except Exception as e:
-            App.Console.PrintError(f"  ✗ Failed to import TrajectoryCalculator: {e}\n")
+            App.Console.PrintError(f"  Failed to import TrajectoryCalculator: {e}\n")
             import traceback
             App.Console.PrintError(traceback.format_exc())
         
         try:
-            from Commands import BulletLibrary
+            from bullet_designer.Commands import BulletLibrary  # noqa: F401
+
             commands_loaded.append("BulletLibrary")
-            App.Console.PrintLog("  ✓ BulletLibrary loaded\n")
+            App.Console.PrintLog("  BulletLibrary loaded\n")
         except Exception as e:
-            App.Console.PrintWarning(f"  ⚠ Failed to import BulletLibrary: {e}\n")
-        
+            App.Console.PrintWarning(f"  Failed to import BulletLibrary: {e}\n")
+
         try:
-            from Commands import ExportTools
+            from bullet_designer.Commands import ExportTools  # noqa: F401
+
             commands_loaded.append("ExportTools")
-            App.Console.PrintLog("  ✓ ExportTools loaded\n")
+            App.Console.PrintLog("  ExportTools loaded\n")
         except Exception as e:
-            App.Console.PrintError(f"  ✗ Failed to import ExportTools: {e}\n")
+            App.Console.PrintError(f"  Failed to import ExportTools: {e}\n")
             import traceback
             App.Console.PrintError(traceback.format_exc())
         
         # Import preferences page
         try:
-            from Gui import PreferencesPage
-            App.Console.PrintLog("  ✓ PreferencesPage loaded\n")
+            from bullet_designer.Gui import PreferencesPage  # noqa: F401
+
+            App.Console.PrintLog("  PreferencesPage loaded\n")
         except Exception as e:
-            App.Console.PrintWarning(f"  ⚠ Failed to import PreferencesPage: {e}\n")
+            App.Console.PrintWarning(f"  Failed to import PreferencesPage: {e}\n")
         
         # List of command names for toolbar
         # Commands register themselves when their modules are imported
@@ -134,7 +140,11 @@ class BulletDesignerWorkbench(Gui.Workbench):
         ]
         self.appendMenu(["Bullet Designer", "Export"], export_menu)
         
-        App.Console.PrintLog(f"Bullet Designer workbench initialized ({len(commands_loaded)} modules loaded)\n")
+        msg = (
+            "Bullet Designer workbench initialized "
+            f"({len(commands_loaded)} modules loaded)\n"
+        )
+        App.Console.PrintLog(msg)
     
     def Activated(self):
         """

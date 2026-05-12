@@ -5,26 +5,14 @@ This command creates a new parametric bullet object and opens
 the task panel for parameter editing.
 """
 
+import os
+
 import FreeCAD as App
 import FreeCADGui as Gui
-import os
-import sys
 
-# Get workbench directory
-# Commands/CreateBullet.py -> Commands/ -> BulletDesigner/ (workbench root)
-try:
-    wb_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-except NameError:
-    # Fallback if __file__ not available
-    import FreeCAD as App
-    wb_path = os.path.join(App.getUserAppDataDir(), "Mod", "BulletDesigner")
-
-# Add paths for imports
-sys.path.insert(0, os.path.join(wb_path, "Gui"))
-sys.path.insert(0, os.path.join(wb_path, "Objects"))
-
-from Objects.BulletFeature import makeBulletFeature
-from Gui.BulletTaskPanel import BulletTaskPanel
+from bullet_designer import WB_ROOT
+from bullet_designer.Gui.BulletTaskPanel import BulletTaskPanel
+from bullet_designer.Objects.BulletFeature import makeBulletFeature
 
 
 class CreateBulletCommand:
@@ -35,7 +23,7 @@ class CreateBulletCommand:
     def __init__(self):
         """Initialize the command."""
         # Get icon path
-        icon_path = os.path.join(wb_path, "Resources", "icons", "CreateBullet.svg")
+        icon_path = os.path.join(WB_ROOT, "Resources", "icons", "CreateBullet.svg")
         # Fallback if icon doesn't exist
         if not os.path.exists(icon_path):
             icon_path = ""

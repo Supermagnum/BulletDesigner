@@ -4,16 +4,12 @@ View providers for Bullet Designer objects.
 This module provides 3D visualization for bullet objects.
 """
 
+import os
+
 import FreeCAD as App
 import FreeCADGui as Gui
-import os
-import sys
 
-# Add Utils to path
-wb_path = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
-sys.path.insert(0, os.path.join(wb_path, "Utils"))
-
-from Utils.MaterialDatabase import get_material_database
+from bullet_designer.Utils.MaterialDatabase import get_material_database
 
 
 class ViewProviderBullet:

@@ -2,9 +2,12 @@
 Bullet Library command (placeholder for future implementation).
 """
 
+import os
+
 import FreeCAD as App
 import FreeCADGui as Gui
-import os
+
+from bullet_designer import WB_ROOT
 
 
 class BulletLibraryCommand:
@@ -14,10 +17,9 @@ class BulletLibraryCommand:
     
     def __init__(self):
         """Initialize the command."""
-        wb_path = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
         self.resources = {
             "Pixmap": os.path.join(
-                wb_path, "Resources", "icons", "Library.svg"
+                WB_ROOT, "Resources", "icons", "Library.svg"
             ),
             "MenuText": "Bullet Library",
             "ToolTip": "Browse and load bullet templates (not yet implemented)",

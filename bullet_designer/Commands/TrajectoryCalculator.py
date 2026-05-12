@@ -5,24 +5,21 @@ This command opens a dialog for calculating bullet trajectory including
 transonic zone analysis, drop, spin drift, and velocity decay.
 """
 
+import bisect
+import math
+import os
+
 import FreeCAD as App
 import FreeCADGui as Gui
-from PySide2 import QtWidgets, QtCore, QtGui
-import os
-import sys
-import math
-import bisect
+from PySide import QtCore, QtGui, QtWidgets
 
-# Add Utils to path
-wb_path = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
-sys.path.insert(0, os.path.join(wb_path, "Utils"))
-
-from Utils.Calculations import (
-    calculate_stability_factor_miller,
+from bullet_designer import WB_ROOT
+from bullet_designer.Utils.Calculations import (
     calculate_ballistic_coefficient_g1,
-    calculate_sectional_density
+    calculate_sectional_density,
+    calculate_stability_factor_miller,
 )
-from Utils.MaterialDatabase import get_material_database
+from bullet_designer.Utils.MaterialDatabase import get_material_database
 
 # G7 Reference Drag Table (CD vs Mach)
 MACH_TABLE = [0.0, 0.5, 0.7, 0.8, 0.825, 0.85, 0.875, 0.9, 0.925,
@@ -686,10 +683,9 @@ class TrajectoryCalculatorCommand:
     
     def __init__(self):
         """Initialize the command."""
-        wb_path = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
         self.resources = {
             "Pixmap": os.path.join(
-                wb_path, "Resources", "icons", "Calculator.svg"
+                WB_ROOT, "Resources", "icons", "Calculator.svg"
             ),
             "MenuText": "Trajectory & Transonic",
             "ToolTip": "Calculate bullet trajectory with transonic zone analysis",
