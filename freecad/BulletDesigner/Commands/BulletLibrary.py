@@ -7,7 +7,7 @@ import os
 import FreeCAD as App
 import FreeCADGui as Gui
 
-from bullet_designer import WB_ROOT
+from freecad.BulletDesigner import WB_ROOT
 
 
 class BulletLibraryCommand:
@@ -19,7 +19,7 @@ class BulletLibraryCommand:
         """Initialize the command."""
         self.resources = {
             "Pixmap": os.path.join(
-                WB_ROOT, "Resources", "icons", "Library.svg"
+                WB_ROOT, "Resources", "Icons", "Library.svg"
             ),
             "MenuText": "Bullet Library",
             "ToolTip": "Browse and load bullet templates (not yet implemented)",

@@ -13,13 +13,13 @@ import FreeCAD as App
 import FreeCADGui as Gui
 from PySide import QtCore, QtGui, QtWidgets
 
-from bullet_designer import WB_ROOT
-from bullet_designer.Utils.Calculations import (
+from freecad.BulletDesigner import WB_ROOT
+from freecad.BulletDesigner.Utils.Calculations import (
     calculate_ballistic_coefficient_g1,
     calculate_sectional_density,
     calculate_stability_factor_miller,
 )
-from bullet_designer.Utils.MaterialDatabase import get_material_database
+from freecad.BulletDesigner.Utils.MaterialDatabase import get_material_database
 
 # G7 Reference Drag Table (CD vs Mach)
 MACH_TABLE = [0.0, 0.5, 0.7, 0.8, 0.825, 0.85, 0.875, 0.9, 0.925,
@@ -685,7 +685,7 @@ class TrajectoryCalculatorCommand:
         """Initialize the command."""
         self.resources = {
             "Pixmap": os.path.join(
-                WB_ROOT, "Resources", "icons", "Calculator.svg"
+                WB_ROOT, "Resources", "Icons", "Calculator.svg"
             ),
             "MenuText": "Trajectory & Transonic",
             "ToolTip": "Calculate bullet trajectory with transonic zone analysis",

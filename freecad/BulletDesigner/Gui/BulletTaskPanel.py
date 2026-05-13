@@ -11,14 +11,14 @@ import FreeCAD as App
 import FreeCADGui as Gui
 from PySide import QtCore, QtWidgets
 
-from bullet_designer.Utils.Calculations import (
+from freecad.BulletDesigner.Utils.Calculations import (
     calculate_bullet_dimensions_from_weight,
     calculate_hp_depth_limits,
     min_wall_thickness,
     validate_hp_diameter,
     validate_tip_design,
 )
-from bullet_designer.Utils.MaterialDatabase import get_material_database
+from freecad.BulletDesigner.Utils.MaterialDatabase import get_material_database
 
 
 class BulletTaskPanel:

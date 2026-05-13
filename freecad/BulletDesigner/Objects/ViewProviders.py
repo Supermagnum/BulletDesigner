@@ -9,7 +9,7 @@ import os
 import FreeCAD as App
 import FreeCADGui as Gui
 
-from bullet_designer.Utils.MaterialDatabase import get_material_database
+from freecad.BulletDesigner.Utils.MaterialDatabase import get_material_database
 
 
 class ViewProviderBullet:

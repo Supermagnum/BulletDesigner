@@ -1,0 +1,13 @@
+# SPDX-License-Identifier: MIT
+# PEP 517 project metadata per FreeCAD Addon Academy (Structuring).
+
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "freecad-bulletdesigner"
+version = "1.0.0"
+description = "Bullet Designer FreeCAD workbench (parametric projectiles)"
+readme = "README.md"
+requires-python = ">=3.8"

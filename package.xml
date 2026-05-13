@@ -9,12 +9,12 @@
     <license file="LICENSE">MIT</license>
     <url type="repository">https://github.com/Supermagnum/BulletDesigner</url>
     <url type="readme">https://github.com/Supermagnum/BulletDesigner/blob/main/README.md</url>
-    <url type="documentation">https://github.com/Supermagnum/BulletDesigner/blob/main/USER_MANUAL.md</url>
-    <icon>Resources/icons/BulletDesigner.svg</icon>
+    <url type="documentation">https://github.com/Supermagnum/BulletDesigner/blob/main/Documentation/USER_MANUAL.md</url>
+    <icon>Resources/Icons/BulletDesigner.svg</icon>
     <content>
         <workbench>
             <classname>BulletDesignerWorkbench</classname>
-            <subdirectory>./</subdirectory>
+            <subdirectory>freecad/BulletDesigner</subdirectory>
             <freecadmin>0.21</freecadmin>
             <pythonmin>3.8</pythonmin>
         </workbench>

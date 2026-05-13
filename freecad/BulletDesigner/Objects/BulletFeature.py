@@ -10,7 +10,7 @@ import os
 import FreeCAD as App
 import Part
 
-from bullet_designer.Utils.Calculations import (
+from freecad.BulletDesigner.Utils.Calculations import (
     calculate_ballistic_coefficient_g1,
     calculate_bearing_surface,
     calculate_bullet_dimensions_from_weight,
@@ -19,12 +19,12 @@ from bullet_designer.Utils.Calculations import (
     calculate_sectional_density,
     calculate_weight_from_volume,
 )
-from bullet_designer.Utils.GeometryHelpers import (
+from freecad.BulletDesigner.Utils.GeometryHelpers import (
     create_bullet_solid,
     generate_bullet_profile_points,
     validate_bullet_parameters,
 )
-from bullet_designer.Utils.MaterialDatabase import get_material_database
+from freecad.BulletDesigner.Utils.MaterialDatabase import get_material_database
 
 
 class BulletFeature:
@@ -1543,7 +1543,7 @@ def makeBulletFeature(name="Bullet"):
 
     # Set view provider
     if App.GuiUp:
-        from bullet_designer.Objects.ViewProviders import ViewProviderBullet
+        from freecad.BulletDesigner.Objects.ViewProviders import ViewProviderBullet
 
         ViewProviderBullet(obj.ViewObject)
 

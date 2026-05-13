@@ -11,7 +11,7 @@ import FreeCAD as App
 import FreeCADGui as Gui
 from PySide import QtWidgets
 
-from bullet_designer.Utils.Calculations import (
+from freecad.BulletDesigner.Utils.Calculations import (
     calculate_ballistic_coefficient_g1,
     calculate_hp_depth_limits,
     calculate_nose_configuration,
@@ -23,8 +23,8 @@ from bullet_designer.Utils.Calculations import (
     validate_hp_diameter,
     validate_tip_design,
 )
-from bullet_designer import WB_ROOT
-from bullet_designer.Utils.MaterialDatabase import get_material_database
+from freecad.BulletDesigner import WB_ROOT
+from freecad.BulletDesigner.Utils.MaterialDatabase import get_material_database
 
 # Units: 0 = Metric (m/s, Celsius, hPa), 1 = Imperial (fps, Fahrenheit, inHg)
 PREF_GROUP = "User parameter:BaseApp/Preferences/Mod/BulletDesigner"
@@ -866,7 +866,7 @@ class BallisticCalculatorCommand:
     def __init__(self):
         """Initialize the command."""
         self.resources = {
-            "Pixmap": os.path.join(WB_ROOT, "Resources", "icons", "Calculator.svg"),
+            "Pixmap": os.path.join(WB_ROOT, "Resources", "Icons", "Calculator.svg"),
             "MenuText": "Ballistic Calculator",
             "ToolTip": "Calculate ballistic properties and stability",
             "Accel": "C",

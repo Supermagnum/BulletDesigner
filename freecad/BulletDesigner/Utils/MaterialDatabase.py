@@ -10,7 +10,7 @@ import os
 import FreeCAD as App
 from typing import Dict, List, Optional
 
-from bullet_designer import WB_ROOT
+from freecad.BulletDesigner import WB_ROOT
 
 
 class MaterialDatabase:

@@ -1,13 +1,16 @@
 """
 FreeCAD Bullet Designer Workbench GUI initialization.
 
-This module initializes the GUI components of the workbench,
-including toolbars, menus, and commands.
+Registers the workbench. Ext (pip) addons import this module as
+``freecad.BulletDesigner.init_gui``. Directory addons load ``InitGui.py`` first per FreeCAD.
 """
+
+import os
 
 import FreeCAD as App
 import FreeCADGui as Gui
-import os
+
+from freecad.BulletDesigner import WB_ROOT
 
 
 class BulletDesignerWorkbench(Gui.Workbench):
@@ -20,16 +23,8 @@ class BulletDesignerWorkbench(Gui.Workbench):
     
     def __init__(self):
         """Initialize workbench properties."""
-        # Get workbench directory - handle case where __file__ might not be defined
-        try:
-            __dir__ = os.path.dirname(__file__)
-        except NameError:
-            # Fallback: use FreeCAD's Mod path
-            import FreeCAD as App
-            __dir__ = os.path.join(App.getUserAppDataDir(), "Mod", "BulletDesigner")
-        
         self.__class__.Icon = os.path.join(
-            __dir__, "Resources", "icons", "BulletDesigner.svg"
+            WB_ROOT, "Resources", "Icons", "BulletDesigner.svg"
         )
         self.__class__.MenuText = "Bullet Designer"
         self.__class__.ToolTip = "Design parametric bullets and projectiles"
@@ -45,7 +40,7 @@ class BulletDesignerWorkbench(Gui.Workbench):
         commands_loaded = []
         
         try:
-            from bullet_designer.Commands import CreateBullet  # noqa: F401
+            from freecad.BulletDesigner.Commands import CreateBullet  # noqa: F401
 
             commands_loaded.append("CreateBullet")
             # Verify command was registered
@@ -59,7 +54,7 @@ class BulletDesignerWorkbench(Gui.Workbench):
             App.Console.PrintError(traceback.format_exc())
         
         try:
-            from bullet_designer.Commands import BallisticCalculator  # noqa: F401
+            from freecad.BulletDesigner.Commands import BallisticCalculator  # noqa: F401
 
             commands_loaded.append("BallisticCalculator")
             App.Console.PrintLog("  BallisticCalculator loaded\n")
@@ -69,7 +64,7 @@ class BulletDesignerWorkbench(Gui.Workbench):
             App.Console.PrintError(traceback.format_exc())
         
         try:
-            from bullet_designer.Commands import TrajectoryCalculator  # noqa: F401
+            from freecad.BulletDesigner.Commands import TrajectoryCalculator  # noqa: F401
 
             commands_loaded.append("TrajectoryCalculator")
             App.Console.PrintLog("  TrajectoryCalculator loaded\n")
@@ -79,7 +74,7 @@ class BulletDesignerWorkbench(Gui.Workbench):
             App.Console.PrintError(traceback.format_exc())
         
         try:
-            from bullet_designer.Commands import BulletLibrary  # noqa: F401
+            from freecad.BulletDesigner.Commands import BulletLibrary  # noqa: F401
 
             commands_loaded.append("BulletLibrary")
             App.Console.PrintLog("  BulletLibrary loaded\n")
@@ -87,7 +82,7 @@ class BulletDesignerWorkbench(Gui.Workbench):
             App.Console.PrintWarning(f"  Failed to import BulletLibrary: {e}\n")
 
         try:
-            from bullet_designer.Commands import ExportTools  # noqa: F401
+            from freecad.BulletDesigner.Commands import ExportTools  # noqa: F401
 
             commands_loaded.append("ExportTools")
             App.Console.PrintLog("  ExportTools loaded\n")
@@ -98,7 +93,7 @@ class BulletDesignerWorkbench(Gui.Workbench):
         
         # Import preferences page
         try:
-            from bullet_designer.Gui import PreferencesPage  # noqa: F401
+            from freecad.BulletDesigner.Gui import PreferencesPage  # noqa: F401
 
             App.Console.PrintLog("  PreferencesPage loaded\n")
         except Exception as e:

@@ -7,7 +7,7 @@ import os
 import FreeCAD as App
 import FreeCADGui as Gui
 
-from bullet_designer import WB_ROOT
+from freecad.BulletDesigner import WB_ROOT
 
 
 class ExportSTLCommand:
@@ -19,7 +19,7 @@ class ExportSTLCommand:
         """Initialize the command."""
         self.resources = {
             "Pixmap": os.path.join(
-                WB_ROOT, "Resources", "icons", "Export.svg"
+                WB_ROOT, "Resources", "Icons", "Export.svg"
             ),
             "MenuText": "Export to STL",
             "ToolTip": "Export selected bullet to STL file",
@@ -74,7 +74,7 @@ class ExportSTEPCommand:
         """Initialize the command."""
         self.resources = {
             "Pixmap": os.path.join(
-                WB_ROOT, "Resources", "icons", "Export.svg"
+                WB_ROOT, "Resources", "Icons", "Export.svg"
             ),
             "MenuText": "Export to STEP",
             "ToolTip": "Export selected bullet to STEP file",

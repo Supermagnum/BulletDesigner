@@ -6,7 +6,7 @@ This project was implemented with substantial **AI-assisted coding**. **The main
 
 Community help through GitHub issues and pull requests is especially valuable. Should maintenance slow or stall, forks and successor maintainers who carry this addon forward are welcome.
 
-Recommended addon layout terminology (Modern **`freecad/<AddonName>/`** vs Legacy **`Init.py`** / **`InitGui.py`** at the workbench root) is explained in [Structuring addons (FreeCAD Addon Academy)](https://freecad.github.io/Addon-Academy/Topics/Structuring/).
+Workbench layout follows the **Modern `freecad/<ModName>/` pattern** from [Structuring addons (FreeCAD Addon Academy)](https://freecad.github.io/Addon-Academy/Topics/Structuring/). Legacy **`Init.py` / root `InitGui.py`** contrasts are summarized there; directory-based FreeCAD still expects a **`InitGui.py` filename inside the workbench folder (see **`FreeCADGuiInit.py`** `DirModGui`), so this repo ships a tiny **`InitGui.py`** shim that imports **`init_gui`**.
 
 ## Table of contents
 
@@ -79,11 +79,11 @@ The author or maker of this workbench is not liable for damages caused by incorr
 
 A comprehensive FreeCAD workbench for parametric bullet and projectile design with ballistic calculations, material database, and export capabilities.
 
-![Bullet Designer Workbench](Resources/screenshots/screenshot.png)
+![Bullet Designer Workbench](Resources/Media/screenshot.png)
 
 ## Quick Links
 
-- **[User Manual](USER_MANUAL.md)** - Complete guide with step-by-step instructions
+- **[User Manual](Documentation/USER_MANUAL.md)** - Complete guide with step-by-step instructions
 - [Installation](#installation)
 - [Usage](#usage)
 - [Screenshots](#screenshots)
@@ -132,7 +132,7 @@ Total band space needed = `(Number of Bands × Band Length) + ((Number of Bands 
 
 If bands don't fit, reduce bands/band length/spacing, increase total length, or reduce ogive/boat tail length.
 
-See the [User Manual](USER_MANUAL.md#important-constraints) for detailed explanation and examples.
+See the [User Manual](Documentation/USER_MANUAL.md#important-constraints) for detailed explanation and examples.
 
 ## Ogive Geometry Implementation
 
@@ -153,10 +153,10 @@ This approach creates a **smooth, continuous arc** without visible sectional lin
 
 ## Screenshots
 
-![Bullet Designer](Resources/screenshots/screenshot.png)
+![Bullet Designer](Resources/Media/screenshot.png)
 *Bullet Designer workbench and bullet creation*
 
-![Bullet Designer](Resources/screenshots/screenshot2.png)
+![Bullet Designer](Resources/Media/screenshot2.png)
 *Parametric bullet design and task panel*
 
 ## Installation
@@ -180,7 +180,7 @@ This approach creates a **smooth, continuous arc** without visible sectional lin
 
 ## Usage
 
-For detailed step-by-step instructions, see the **[User Manual](USER_MANUAL.md)**.
+For detailed step-by-step instructions, see the **[User Manual](Documentation/USER_MANUAL.md)**.
 
 ### Creating a Bullet
 
@@ -570,38 +570,43 @@ Custom materials can be added through the material selection interface.
 
 ## File Structure
 
-Official guidance appears in [**Structuring addons** (Addon Academy)](https://freecad.github.io/Addon-Academy/Topics/Structuring):
+This repository follows the **Modern layout** from [Structuring addons (FreeCAD Addon Academy)](https://freecad.github.io/Addon-Academy/Topics/Structuring/): **`package.xml`** at the repo root and **all addon Python under `freecad/BulletDesigner/`** (**`__init__.py`**, **`init_gui.py`**, plus **`Commands/`**, **`Gui/`**, **`Objects/`**, **`Utils/`**). Documentation lives under **`Documentation/`**; **`Resources/Icons`** and **`Resources/Media`** match the academy example names; **`pyproject.toml`** is present for PEP 517 metadata.
 
-- **Modern (recommended)** layout puts **all addon Python code** inside **`freecad/<AddonName>/`** (typically `__init__.py`, `init_gui.py`, and tool modules), with **`package.xml`**, documentation, **`Resources/`**, and packaging files beside that folder—not loose Python sprinkled at the repo root.
-- **Legacy** layout uses **`Init.py`** and **`InitGui.py`** (and often other modules) beside **`package.xml`**, matching the wiki’s classic workbench bootstrap.
+FreeCAD **`DirModGui`** (directory addons) executes a script named **`InitGui.py`** inside the path given by **`package.xml` `<subdirectory>`** (**see `FreeCADGuiInit.DirModGui`** in upstream FreeCAD). The academy names the implementation **`init_gui.py`**; **`InitGui.py`** here is therefore a **short shim** that imports **`freecad.BulletDesigner.init_gui`**.
 
-BulletDesigner combines a **Legacy-style root** (**`Init.py`**, **`InitGui.py`** here match `package.xml` workbench subdirectory **`./`**) with implementations in a **`bullet_designer/`** package so imports stay namespaced and off FreeCAD’s top-level **`sys.path`**. That **differs from** the Addon Academy **Modern** tree, which nests code under **`freecad/<AddonName>/`** rather than beside `Init*.py`.
+**Legacy root `Init.py`** was omitted (it is optional in **`DirMod.run_init`**).
 
-A fuller migration toward the Academy **Modern** pattern would relocate modules under something like **`freecad/bullet_designer/`**, adopt **`init_gui.py`** (and related conventions), adjust imports, and update packaging—not done in this revision.
+The academy often splits licences into **`LICENSE-Code`** / **`LICENSE-Assets`**; this project still ships a single **`MIT`** **`LICENSE`** file.
 
-Approximate repository layout:
+Repository tree:
 
 ```
 BulletDesigner/
-├── Init.py                     # Legacy-style non-GUI init (runs on console startup)
-├── InitGui.py                  # Legacy-style GUI init (register workbench/commands)
-├── package.xml                 # Addon manifest
-├── README.md                   # This file
-├── USER_MANUAL.md
+├── package.xml
+├── pyproject.toml
+├── README.md
 ├── CHANGELOG.md
 ├── LICENSE
-├── AddonCatalog.json           # Optional catalog snippet (reference only)
-├── bullet_designer/            # Workbench Python package (Commands, Gui, Objects, Utils)
-│   ├── __init__.py
-│   └── ...
+├── AddonCatalog.json
+├── Documentation/
+│   └── USER_MANUAL.md
+├── freecad/
+│   └── BulletDesigner/
+│       ├── __init__.py          # WB_ROOT, version constants
+│       ├── InitGui.py           # DirMod shim (imports init_gui)
+│       ├── init_gui.py          # registers workbench, loads commands
+│       ├── Commands/
+│       ├── Gui/
+│       ├── Objects/
+│       └── Utils/
 ├── Resources/
-│   ├── icons/
-│   └── screenshots/            # Screenshot PNGs (+ README noting filenames)
+│   ├── Icons/
+│   └── Media/
 ├── Data/
 │   ├── materials.json
 │   └── bullet_templates.json
 └── examples/
-    └── README.md               # Large *.FCStd / *.pdf samples may live only in full clones
+    └── README.md
 ```
 
 ## Examples
@@ -637,7 +642,7 @@ This workbench requires FreeCAD 0.21 or later due to API changes. It is not back
 
 ## Documentation
 
-- **[User Manual](USER_MANUAL.md)**: Complete guide with step-by-step instructions, parameter explanations, troubleshooting, and best practices
+- **[User Manual](Documentation/USER_MANUAL.md)**: Complete guide with step-by-step instructions, parameter explanations, troubleshooting, and best practices
 - **[Changelog](CHANGELOG.md)**: Detailed list of changes and version history
 - **README.md**: This file - overview and quick reference
 

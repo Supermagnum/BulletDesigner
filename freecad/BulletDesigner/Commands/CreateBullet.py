@@ -10,9 +10,9 @@ import os
 import FreeCAD as App
 import FreeCADGui as Gui
 
-from bullet_designer import WB_ROOT
-from bullet_designer.Gui.BulletTaskPanel import BulletTaskPanel
-from bullet_designer.Objects.BulletFeature import makeBulletFeature
+from freecad.BulletDesigner import WB_ROOT
+from freecad.BulletDesigner.Gui.BulletTaskPanel import BulletTaskPanel
+from freecad.BulletDesigner.Objects.BulletFeature import makeBulletFeature
 
 
 class CreateBulletCommand:
@@ -23,7 +23,7 @@ class CreateBulletCommand:
     def __init__(self):
         """Initialize the command."""
         # Get icon path
-        icon_path = os.path.join(WB_ROOT, "Resources", "icons", "CreateBullet.svg")
+        icon_path = os.path.join(WB_ROOT, "Resources", "Icons", "CreateBullet.svg")
         # Fallback if icon doesn't exist
         if not os.path.exists(icon_path):
             icon_path = ""
