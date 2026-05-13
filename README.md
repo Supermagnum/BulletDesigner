@@ -1,7 +1,16 @@
 # Bullet Designer Workbench for FreeCAD
 
+## Maintainer notice
+
+This project was implemented with substantial **AI-assisted coding**. **The maintainer may not remain able** to contribute hands-on code changes or sustained engineering over time.
+
+Community help through GitHub issues and pull requests is especially valuable. Should maintenance slow or stall, forks and successor maintainers who carry this addon forward are welcome.
+
+Recommended addon layout terminology (Modern **`freecad/<AddonName>/`** vs Legacy **`Init.py`** / **`InitGui.py`** at the workbench root) is explained in [Structuring addons (FreeCAD Addon Academy)](https://freecad.github.io/Addon-Academy/Topics/Structuring/).
+
 ## Table of contents
 
+- [Maintainer notice](#maintainer-notice)
 - [Safety Disclaimer](#safety-disclaimer)
 - [Quick Links](#quick-links)
 - [Features](#features)
@@ -561,26 +570,38 @@ Custom materials can be added through the material selection interface.
 
 ## File Structure
 
+Official guidance appears in [**Structuring addons** (Addon Academy)](https://freecad.github.io/Addon-Academy/Topics/Structuring):
+
+- **Modern (recommended)** layout puts **all addon Python code** inside **`freecad/<AddonName>/`** (typically `__init__.py`, `init_gui.py`, and tool modules), with **`package.xml`**, documentation, **`Resources/`**, and packaging files beside that folder—not loose Python sprinkled at the repo root.
+- **Legacy** layout uses **`Init.py`** and **`InitGui.py`** (and often other modules) beside **`package.xml`**, matching the wiki’s classic workbench bootstrap.
+
+BulletDesigner combines a **Legacy-style root** (**`Init.py`**, **`InitGui.py`** here match `package.xml` workbench subdirectory **`./`**) with implementations in a **`bullet_designer/`** package so imports stay namespaced and off FreeCAD’s top-level **`sys.path`**. That **differs from** the Addon Academy **Modern** tree, which nests code under **`freecad/<AddonName>/`** rather than beside `Init*.py`.
+
+A fuller migration toward the Academy **Modern** pattern would relocate modules under something like **`freecad/bullet_designer/`**, adopt **`init_gui.py`** (and related conventions), adjust imports, and update packaging—not done in this revision.
+
+Approximate repository layout:
+
 ```
 BulletDesigner/
-├── Init.py                 # Workbench initialization
-├── InitGui.py             # GUI initialization
-├── package.xml            # Addon metadata
-├── README.md              # This file
-├── LICENSE                # MIT License
-├── bullet_designer/       # Python package (all workbench modules)
-│   ├── Commands/
-│   ├── Gui/
-│   ├── Objects/
-│   └── Utils/
+├── Init.py                     # Legacy-style non-GUI init (runs on console startup)
+├── InitGui.py                  # Legacy-style GUI init (register workbench/commands)
+├── package.xml                 # Addon manifest
+├── README.md                   # This file
+├── USER_MANUAL.md
+├── CHANGELOG.md
+├── LICENSE
+├── AddonCatalog.json           # Optional catalog snippet (reference only)
+├── bullet_designer/            # Workbench Python package (Commands, Gui, Objects, Utils)
+│   ├── __init__.py
+│   └── ...
 ├── Resources/
-│   ├── icons/             # SVG icons
-│   └── ui/               # UI files (future)
+│   ├── icons/
+│   └── screenshots/            # Screenshot PNGs (+ README noting filenames)
 ├── Data/
 │   ├── materials.json
 │   └── bullet_templates.json
-└── examples/             # Documentation (optional large samples via git or releases)
-    └── README.md
+└── examples/
+    └── README.md               # Large *.FCStd / *.pdf samples may live only in full clones
 ```
 
 ## Examples
